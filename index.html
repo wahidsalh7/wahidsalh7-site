@@ -7,113 +7,506 @@
   <style>
     :root {
       --bg: #f8f5ff;
-      --card: #ffffff;
-      --text: #201833;
+      --surface: #ffffff;
+      --surface-2: #f2ecff;
+      --text: #1f1633;
       --muted: #655b7d;
       --accent: #6c47ff;
-      --accent-soft: #ede7ff;
-      --border: #e3dcf7;
+      --accent-dark: #4b28d6;
+      --accent-soft: #ebe4ff;
+      --border: #e1d8f8;
+      --danger: #c62828;
+      --success: #1b5e20;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: system-ui, -apple-system, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.85;
-    }
-    header {
-      background: linear-gradient(145deg, #2d1b54, #6c47ff);
-      color: #fff;
-      padding: 68px 20px;
-      text-align: center;
-    }
+    body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.85; }
+    a { color: var(--accent); text-decoration: none; }
+    img { max-width: 100%; display: block; }
+    header { background: linear-gradient(140deg, #241347, #5632e8 55%, #7c5cff); color: #fff; padding: 60px 20px 52px; text-align: center; }
+    .top-bar { max-width: 1040px; margin: 0 auto 22px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+    .brand-tag, .admin-trigger { background: rgba(255,255,255,0.16); color: #fff; border: 1px solid rgba(255,255,255,0.32); padding: 6px 14px; border-radius: 999px; font-size: 0.85rem; font-weight: 700; cursor: pointer; }
     header h1 { font-size: 2.15rem; margin-bottom: 10px; }
-    header p { max-width: 660px; margin: 0 auto 24px; opacity: 0.94; }
-    .btn {
-      display: inline-block;
-      background: #fff;
-      color: #2d1b54;
-      text-decoration: none;
-      padding: 10px 22px;
-      border-radius: 999px;
-      font-weight: 700;
-      margin: 4px;
-    }
-    .container { max-width: 940px; margin: 0 auto; padding: 40px 20px; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(265px, 1fr)); gap: 20px; margin-top: 18px; }
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 22px;
-    }
-    .badge {
-      display: inline-block;
-      background: var(--accent-soft);
-      color: var(--accent);
-      padding: 3px 10px;
-      border-radius: 999px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      margin-bottom: 10px;
-    }
-    h2 { font-size: 1.45rem; margin-top: 10px; color: #2b1a52; }
-    .price { margin-top: 12px; font-weight: 700; color: var(--accent); }
-    .contact-box {
-      margin-top: 38px;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 26px;
-      text-align: center;
-    }
-    footer { text-align: center; padding: 30px 16px; color: var(--muted); font-size: 0.9rem; }
+    header p { max-width: 680px; margin: 0 auto 22px; opacity: 0.95; }
+    .hero-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 20px; border-radius: 999px; font-weight: 700; font-size: 0.9rem; border: none; cursor: pointer; }
+    .btn-primary { background: #fff; color: #241347; }
+    .btn-accent { background: var(--accent); color: #fff; }
+    .btn-soft { background: var(--accent-soft); color: var(--accent-dark); }
+    .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+    .btn-danger { background: #fdecec; color: var(--danger); }
+    .btn-sm { padding: 6px 12px; font-size: 0.82rem; }
+    .container { max-width: 1040px; margin: 0 auto; padding: 34px 20px; }
+    .section { margin-bottom: 32px; }
+    .section-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 14px; }
+    .section-title { font-size: 1.4rem; color: #241347; }
+    .collapse-btn { background: var(--surface); border: 1px solid var(--border); color: var(--accent-dark); padding: 5px 12px; border-radius: 999px; font-size: 0.82rem; font-weight: 700; cursor: pointer; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 18px; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; overflow: hidden; display: flex; flex-direction: column; }
+    .card-cover { width: 100%; height: 180px; object-fit: cover; background: var(--surface-2); }
+    .card-body { padding: 18px; flex: 1; display: flex; flex-direction: column; }
+    .badge { display: inline-block; background: var(--accent-soft); color: var(--accent-dark); padding: 3px 10px; border-radius: 999px; font-size: 0.78rem; font-weight: 700; margin-bottom: 8px; align-self: flex-start; }
+    .card h3 { font-size: 1.12rem; margin-bottom: 8px; color: #241347; }
+    .card p { color: var(--muted); font-size: 0.93rem; flex: 1; white-space: pre-line; }
+    .card-footer { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .price-tag { font-weight: 700; color: var(--accent-dark); }
+    .box { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 24px; }
+    .social-list { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+    .social-chip { background: var(--surface-2); border: 1px solid var(--border); color: #241347; padding: 8px 15px; border-radius: 999px; font-weight: 700; font-size: 0.88rem; }
+    .admin-panel { display: none; background: var(--surface); border: 2px solid var(--accent); border-radius: 22px; padding: 22px; margin-top: 26px; }
+    .admin-panel.active { display: block; }
+    .admin-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin: 14px 0 18px; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+    .tab-btn { padding: 8px 15px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface-2); color: var(--text); font-weight: 700; cursor: pointer; font-size: 0.86rem; }
+    .tab-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; }
+    .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+    .field label { font-weight: 700; font-size: 0.86rem; color: #241347; }
+    .field input, .field textarea { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 12px; font-family: inherit; font-size: 0.92rem; background: #fcfaff; color: var(--text); }
+    .field textarea { min-height: 90px; resize: vertical; }
+    .item-list { margin-top: 16px; display: flex; flex-direction: column; gap: 10px; }
+    .item-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 14px; background: var(--surface-2); flex-wrap: wrap; }
+    .status-msg { margin-top: 10px; font-size: 0.88rem; font-weight: 700; }
+    .ok { color: var(--success); }
+    .err { color: var(--danger); }
+    .modal-backdrop { position: fixed; inset: 0; background: rgba(20,10,42,0.55); display: none; align-items: center; justify-content: center; padding: 16px; z-index: 999; }
+    .modal-backdrop.open { display: flex; }
+    .modal-box { background: var(--surface); border-radius: 20px; padding: 22px; width: 100%; max-width: 360px; border: 1px solid var(--border); }
+    footer { text-align: center; padding: 26px 16px; color: var(--muted); font-size: 0.9rem; }
   </style>
 </head>
 <body>
   <header>
-    <h1>وحيد صالح</h1>
-    <p>مدرب وعي ومؤلف كتب — مساحة روحانية وتأملية للوعي الذاتي، المقالات اليومية، الكتب، وجلسات الاستشارة.</p>
-    <a class="btn" href="#consultations">حجز استشارة</a>
-    <a class="btn" href="#books">الكتب</a>
+    <div class="top-bar">
+      <span class="brand-tag" id="syncBadge">حفظ محلي نشط</span>
+      <button class="admin-trigger" onclick="openPinModal()">لوحة التحكم</button>
+    </div>
+    <h1 id="siteName">وحيد صالح</h1>
+    <p id="siteBio">مدرب وعي ومؤلف كتب — مساحة روحانية وتأملية للوعي الذاتي، المقالات اليومية، الكتب، وجلسات الاستشارة.</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="#consultations">حجز استشارة</a>
+      <a class="btn btn-primary" id="heroWhatsappBtn" href="https://wa.me/" target="_blank" rel="noopener">واتساب مباشر</a>
+      <a class="btn btn-primary" href="#books">الكتب والملفات</a>
+    </div>
   </header>
 
   <main class="container">
-    <section id="articles">
-      <h2>المقالات اليومية</h2>
-      <div class="grid">
-        <article class="card">
-          <span class="badge">تأمل يومي</span>
-          <h3>الإنصات للهدوء الداخلي</h3>
-          <p>كيف نلاحظ الضجيج الذهني دون صراع معه، ونعود إلى لحظة الحضور الواعي.</p>
-        </article>
-        <article class="card">
-          <span class="badge">وعي ذاتي</span>
-          <h3>مرآة العلاقات والحدود</h3>
-          <p>قراءة هادئة لما تكشفه مواقف الحياة اليومية عن اتزاننا الداخلي.</p>
-        </article>
+    <section class="section" id="articles">
+      <div class="section-head">
+        <h2 class="section-title">المقالات اليومية</h2>
+        <button class="collapse-btn" onclick="toggleSection('articlesList', this)">طي / فتح</button>
       </div>
+      <div class="grid" id="articlesList"></div>
     </section>
 
-    <section id="books" style="margin-top: 38px;">
-      <h2>الكتب</h2>
-      <div class="grid">
-        <div class="card">
-          <span class="badge">إصدار متاح</span>
-          <h3>مفاتيح الوعي والسكينة</h3>
-          <p>رحلة مكتوبة لفهم الذات وتعميق الحضور والوضوح النفسي والروحي.</p>
-          <div class="price">اطلب نسختك مباشرة</div>
+    <section class="section" id="books">
+      <div class="section-head">
+        <h2 class="section-title">الكتب والملفات</h2>
+        <button class="collapse-btn" onclick="toggleSection('booksList', this)">طي / فتح</button>
+      </div>
+      <div class="grid" id="booksList"></div>
+    </section>
+
+    <section class="section box" id="consultations">
+      <h2 class="section-title">الاستشارات والتواصل المباشر</h2>
+      <p id="consultationText" style="color:var(--muted);margin-top:6px;">جلسات فردية للوعي الذاتي ومرافقة المسار الداخلي، مع إمكانية التواصل المباشر عبر الواتساب لحجز المواعيد أو طلب الكتب.</p>
+      <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+        <a class="btn btn-accent" id="whatsappMainLink" href="https://wa.me/" target="_blank" rel="noopener">تواصل عبر واتساب</a>
+        <span id="whatsappDisplay" style="font-weight:700;color:var(--muted);"></span>
+      </div>
+      <div class="social-list" id="socialLinksPublic"></div>
+    </section>
+
+    <section class="admin-panel" id="adminPanel">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+        <div>
+          <h2 class="section-title">لوحة التحكم الكاملة</h2>
+          <p style="color:var(--muted);font-size:0.86rem;">إدارة المقالات، الكتب والملفات، الصور، الواتساب، السوشيل ميديا، والربط السحابي.</p>
+        </div>
+        <button class="btn btn-outline btn-sm" onclick="lockAdmin()">إغلاق اللوحة</button>
+      </div>
+
+      <div class="admin-tabs">
+        <button class="tab-btn active" onclick="switchTab('tabArticles', this)">المقالات اليومية</button>
+        <button class="tab-btn" onclick="switchTab('tabBooks', this)">الكتب والملفات</button>
+        <button class="tab-btn" onclick="switchTab('tabContact', this)">الواتساب والسوشيل ميديا</button>
+        <button class="tab-btn" onclick="switchTab('tabCloud', this)">Supabase والنسخ الاحتياطي</button>
+      </div>
+
+      <div class="tab-content active" id="tabArticles">
+        <div class="form-grid">
+          <div class="field"><label>عنوان المقال</label><input type="text" id="artTitle" /></div>
+          <div class="field"><label>التصنيف</label><input type="text" id="artTag" placeholder="مثال: تأمل يومي" /></div>
+          <div class="field"><label>رابط صورة المقال (اختياري)</label><input type="text" id="artImgUrl" placeholder="https://..." /></div>
+          <div class="field"><label>أو ارفع صورة من الجهاز</label><input type="file" id="artImgFile" accept="image/*" /></div>
+        </div>
+        <div class="field"><label>نص المقال</label><textarea id="artBody"></textarea></div>
+        <button class="btn btn-accent" onclick="addArticle()">إضافة المقال ونشره</button>
+        <div class="item-list" id="adminArticlesList"></div>
+      </div>
+
+      <div class="tab-content" id="tabBooks">
+        <div class="form-grid">
+          <div class="field"><label>اسم الكتاب أو الملف</label><input type="text" id="bookTitle" /></div>
+          <div class="field"><label>السعر أو الحالة</label><input type="text" id="bookPrice" placeholder="مثال: متاح للطلب" /></div>
+          <div class="field"><label>رابط صورة الغلاف (اختياري)</label><input type="text" id="bookImgUrl" placeholder="https://..." /></div>
+          <div class="field"><label>أو ارفع صورة غلاف</label><input type="file" id="bookImgFile" accept="image/*" /></div>
+          <div class="field"><label>رابط ملف الكتاب (اختياري)</label><input type="text" id="bookFileUrl" placeholder="https://..." /></div>
+          <div class="field"><label>أو ارفع ملفاً من الجهاز</label><input type="file" id="bookFileUpload" /></div>
+        </div>
+        <div class="field"><label>وصف الكتاب أو الملف</label><textarea id="bookDesc"></textarea></div>
+        <button class="btn btn-accent" onclick="addBook()">إضافة الكتاب / الملف</button>
+        <div class="item-list" id="adminBooksList"></div>
+      </div>
+
+      <div class="tab-content" id="tabContact">
+        <div class="form-grid">
+          <div class="field"><label>اسم الموقع / الاسم الظاهر</label><input type="text" id="cfgName" /></div>
+          <div class="field"><label>رقم الواتساب (دولي بدون +)</label><input type="text" id="cfgWhatsapp" placeholder="628123456789" /></div>
+        </div>
+        <div class="field"><label>النبذة التعريفية</label><textarea id="cfgBio"></textarea></div>
+        <div class="field"><label>نص قسم الاستشارات</label><textarea id="cfgConsultText"></textarea></div>
+        <button class="btn btn-accent" onclick="saveContactSettings()">حفظ بيانات التواصل</button>
+
+        <hr style="margin:20px 0;border:none;border-top:1px solid var(--border);" />
+        <h3 style="margin-bottom:10px;">إضافة رابط سوشيل ميديا</h3>
+        <div class="form-grid">
+          <div class="field"><label>اسم المنصة</label><input type="text" id="socName" placeholder="إنستغرام، تيك توك، يوتيوب..." /></div>
+          <div class="field"><label>الرابط الكامل</label><input type="text" id="socUrl" placeholder="https://..." /></div>
+        </div>
+        <button class="btn btn-soft" onclick="addSocialLink()">إضافة رابط المنصة</button>
+        <div class="item-list" id="adminSocialList"></div>
+      </div>
+
+      <div class="tab-content" id="tabCloud">
+        <div class="form-grid">
+          <div class="field"><label>Supabase Project URL</label><input type="text" id="sbUrl" placeholder="https://xxxx.supabase.co" /></div>
+          <div class="field"><label>Supabase Anon Key</label><input type="text" id="sbKey" placeholder="eyJhbGciOi..." /></div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="btn btn-accent" onclick="saveSupabaseConfig()">حفظ إعدادات Supabase</button>
+          <button class="btn btn-soft" onclick="pushToSupabase()">رفع إلى السحابة</button>
+          <button class="btn btn-outline" onclick="pullFromSupabase()">جلب من السحابة</button>
+        </div>
+        <div id="cloudStatus" class="status-msg"></div>
+
+        <hr style="margin:20px 0;border:none;border-top:1px solid var(--border);" />
+        <h3 style="margin-bottom:10px;">نسخة احتياطية (JSON)</h3>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+          <button class="btn btn-soft btn-sm" onclick="exportBackup()">تحميل نسخة احتياطية</button>
+          <input type="file" id="importJsonFile" accept="application/json" onchange="importBackup(event)" style="max-width:250px;" />
         </div>
       </div>
     </section>
-
-    <section id="consultations" class="contact-box">
-      <h2>حجز استشارات وتواصل مباشر</h2>
-      <p>جلسات فردية للوعي الذاتي ومرافقة المسار الداخلي، مع إمكانية التواصل المباشر لحجز المواعيد أو طلب الكتب.</p>
-      <a class="btn" style="background:#6c47ff;color:#fff;" href="https://wa.me/" target="_blank" rel="noopener">تواصل مباشر</a>
-    </section>
   </main>
 
+  <div class="modal-backdrop" id="pinModal">
+    <div class="modal-box">
+      <h3 style="margin-bottom:8px;">دخول لوحة التحكم</h3>
+      <p style="color:var(--muted);font-size:0.86rem;margin-bottom:12px;">أدخل رمز PIN للوصول إلى الإدارة.</p>
+      <div class="field"><label>رمز PIN</label><input type="password" id="pinInput" inputmode="numeric" placeholder="••••" /></div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;">
+        <button class="btn btn-outline btn-sm" onclick="closePinModal()">إلغاء</button>
+        <button class="btn btn-accent btn-sm" onclick="verifyPin()">دخول</button>
+      </div>
+      <div id="pinError" class="status-msg err"></div>
+    </div>
+  </div>
+
   <footer>wahidsalh7 — جميع الحقوق محفوظة</footer>
+  <script>
+    const ADMIN_PIN = "1993";
+    const STORAGE_KEY = "wahidsalh7_site_state_v1";
+    const SB_CFG_KEY = "wahidsalh7_supabase_cfg_v1";
+
+    const DEFAULT_STATE = {
+      siteName: "وحيد صالح",
+      siteBio: "مدرب وعي ومؤلف كتب — مساحة روحانية وتأملية للوعي الذاتي، المقالات اليومية، الكتب، وجلسات الاستشارة.",
+      consultationText: "جلسات فردية للوعي الذاتي ومرافقة المسار الداخلي، مع إمكانية التواصل المباشر عبر الواتساب لحجز المواعيد أو طلب الكتب.",
+      whatsapp: "",
+      socials: [
+        { id: "s1", name: "إنستغرام", url: "https://instagram.com" },
+        { id: "s2", name: "تيك توك", url: "https://tiktok.com" },
+        { id: "s3", name: "فيسبوك", url: "https://facebook.com" }
+      ],
+      articles: [
+        { id: "a1", title: "الإنصات للهدوء الداخلي", tag: "تأمل يومي", image: "", body: "كيف نلاحظ الضجيج الذهني دون صراع معه، ونعود إلى لحظة الحضور الواعي والسكينة." },
+        { id: "a2", title: "مرآة العلاقات والحدود", tag: "وعي ذاتي", image: "", body: "قراءة هادئة لما تكشفه مواقف الحياة اليومية عن اتزاننا الداخلي ووضوح مسارنا." }
+      ],
+      books: [
+        { id: "b1", title: "مفاتيح الوعي والسكينة", price: "متاح للطلب المباشر", image: "", fileData: "", fileName: "", fileUrl: "", desc: "رحلة مكتوبة لفهم الذات وتعميق الحضور والوضوح النفسي والروحي." }
+      ]
+    };
+
+    let state = loadLocalState();
+    let isUnlocked = false;
+
+    function loadLocalState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return structuredClone(DEFAULT_STATE);
+        return { ...structuredClone(DEFAULT_STATE), ...JSON.parse(raw) };
+      } catch { return structuredClone(DEFAULT_STATE); }
+    }
+
+    function saveLocalState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      renderAll();
+      const sb = getSupabaseConfig();
+      if (sb.url && sb.key) pushToSupabase(true);
+    }
+
+    function getSupabaseConfig() {
+      try { return JSON.parse(localStorage.getItem(SB_CFG_KEY) || "{}"); } catch { return {}; }
+    }
+
+    function saveSupabaseConfig() {
+      const url = document.getElementById("sbUrl").value.trim().replace(/\/+$/, "");
+      const key = document.getElementById("sbKey").value.trim();
+      localStorage.setItem(SB_CFG_KEY, JSON.stringify({ url, key }));
+      setCloudMsg(url && key ? "تم حفظ إعدادات Supabase محلياً." : "تم مسح إعدادات Supabase.", true);
+      updateSyncBadge();
+    }
+
+    function setCloudMsg(msg, ok = true) {
+      const el = document.getElementById("cloudStatus");
+      if (!el) return;
+      el.textContent = msg;
+      el.className = "status-msg " + (ok ? "ok" : "err");
+    }
+
+    function updateSyncBadge() {
+      const sb = getSupabaseConfig();
+      document.getElementById("syncBadge").textContent = (sb.url && sb.key) ? "مزامنة Supabase مفعّلة" : "حفظ محلي نشط";
+    }
+
+    async function pushToSupabase(silent = false) {
+      const sb = getSupabaseConfig();
+      if (!sb.url || !sb.key) {
+        if (!silent) setCloudMsg("يرجى إدخال Supabase URL و Anon Key أولاً.", false);
+        return;
+      }
+      try {
+        const payload = { id: "main", data: state, updated_at: new Date().toISOString() };
+        let res = await fetch(`${sb.url}/rest/v1/site_state?id=eq.main`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json", "apikey": sb.key, "Authorization": `Bearer ${sb.key}`, "Prefer": "return=representation" },
+          body: JSON.stringify(payload)
+        });
+        const rows = await res.json();
+        if (!Array.isArray(rows) || rows.length === 0) {
+          res = await fetch(`${sb.url}/rest/v1/site_state`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "apikey": sb.key, "Authorization": `Bearer ${sb.key}`, "Prefer": "return=representation" },
+            body: JSON.stringify(payload)
+          });
+        }
+        if (!res.ok) throw new Error();
+        if (!silent) setCloudMsg("تمت مزامنة البيانات مع Supabase بنجاح.", true);
+      } catch {
+        if (!silent) setCloudMsg("تعذر المزامنة: تأكد من جدول site_state وصلاحيات RLS.", false);
+      }
+    }
+
+    async function pullFromSupabase() {
+      const sb = getSupabaseConfig();
+      if (!sb.url || !sb.key) { setCloudMsg("يرجى إدخال Supabase URL و Anon Key أولاً.", false); return; }
+      try {
+        const res = await fetch(`${sb.url}/rest/v1/site_state?id=eq.main&select=data`, {
+          headers: { "apikey": sb.key, "Authorization": `Bearer ${sb.key}` }
+        });
+        const rows = await res.json();
+        if (Array.isArray(rows) && rows[0] && rows[0].data) {
+          state = { ...structuredClone(DEFAULT_STATE), ...rows[0].data };
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+          renderAll();
+          setCloudMsg("تم جلب أحدث البيانات من Supabase بنجاح.", true);
+        } else { setCloudMsg("لم يتم العثور على سجل باسم main في جدول site_state.", false); }
+      } catch { setCloudMsg("تعذر الجلب من Supabase.", false); }
+    }
+
+    function readFileAsDataUrl(file) {
+      return new Promise((resolve, reject) => {
+        if (!file) return resolve("");
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function escapeHtml(str = "") {
+      return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
+
+    function getWhatsappUrl() {
+      const clean = (state.whatsapp || "").replace(/[^\d]/g, "");
+      return clean ? `https://wa.me/${clean}` : "https://wa.me/";
+    }
+
+    function renderAll() {
+      updateSyncBadge();
+      document.title = `${state.siteName} | مدرب وعي ومؤلف كتب`;
+      document.getElementById("siteName").textContent = state.siteName;
+      document.getElementById("siteBio").textContent = state.siteBio;
+      document.getElementById("consultationText").textContent = state.consultationText;
+      const waUrl = getWhatsappUrl();
+      document.getElementById("heroWhatsappBtn").href = waUrl;
+      document.getElementById("whatsappMainLink").href = waUrl;
+      document.getElementById("whatsappDisplay").textContent = state.whatsapp ? `واتساب: ${state.whatsapp}` : "";
+
+      document.getElementById("articlesList").innerHTML = state.articles.length
+        ? state.articles.map(a => `<article class="card">${a.image ? `<img class="card-cover" src="${escapeHtml(a.image)}" alt="${escapeHtml(a.title)}" />` : ""}<div class="card-body"><span class="badge">${escapeHtml(a.tag || "مقال يومي")}</span><h3>${escapeHtml(a.title)}</h3><p>${escapeHtml(a.body)}</p></div></article>`).join("")
+        : `<div class="card"><div class="card-body"><p>لا توجد مقالات منشورة حالياً.</p></div></div>`;
+
+      document.getElementById("booksList").innerHTML = state.books.length
+        ? state.books.map(b => {
+          const href = b.fileUrl || b.fileData || "";
+          const label = b.fileName ? `تحميل: ${escapeHtml(b.fileName)}` : "فتح الملف / الكتاب";
+          return `<div class="card">${b.image ? `<img class="card-cover" src="${escapeHtml(b.image)}" alt="${escapeHtml(b.title)}" />` : ""}<div class="card-body"><span class="badge">إصدار / ملف</span><h3>${escapeHtml(b.title)}</h3><p>${escapeHtml(b.desc)}</p><div class="card-footer"><span class="price-tag">${escapeHtml(b.price || "متاح")}</span><div style="display:flex;gap:6px;flex-wrap:wrap;">${href ? `<a class="btn btn-soft btn-sm" href="${escapeHtml(href)}" download="${escapeHtml(b.fileName \vert{}\vert{} "file")}" target="_blank" rel="noopener">${label}</a>` : ""}<a class="btn btn-accent btn-sm" href="${waUrl}" target="_blank" rel="noopener">طلب / استفسار</a></div></div></div></div>`;
+        }).join("")
+        : `<div class="card"><div class="card-body"><p>لا توجد كتب أو ملفات مضافة حالياً.</p></div></div>`;
+
+      document.getElementById("socialLinksPublic").innerHTML = state.socials.map(s => `<a class="social-chip" href="${escapeHtml(s.url)}" target="_blank" rel="noopener">${escapeHtml(s.name)}</a>`).join("");
+      if (isUnlocked) renderAdminLists();
+    }
+
+    function renderAdminLists() {
+      document.getElementById("cfgName").value = state.siteName;
+      document.getElementById("cfgBio").value = state.siteBio;
+      document.getElementById("cfgConsultText").value = state.consultationText;
+      document.getElementById("cfgWhatsapp").value = state.whatsapp;
+      const sb = getSupabaseConfig();
+      document.getElementById("sbUrl").value = sb.url || "";
+      document.getElementById("sbKey").value = sb.key || "";
+
+      document.getElementById("adminArticlesList").innerHTML = state.articles.map(a => `<div class="item-row"><div><strong>${escapeHtml(a.title)}</strong> <span class="badge" style="margin:0 6px;">${escapeHtml(a.tag || "")}</span></div><button class="btn btn-danger btn-sm" onclick="deleteArticle('${a.id}')">حذف</button></div>`).join("");
+      document.getElementById("adminBooksList").innerHTML = state.books.map(b => `<div class="item-row"><div><strong>${escapeHtml(b.title)}</strong>${b.fileName ? ` — <span style="color:var(--muted);font-size:0.85rem;">${escapeHtml(b.fileName)}</span>` : ""}</div><button class="btn btn-danger btn-sm" onclick="deleteBook('${b.id}')">حذف</button></div>`).join("");
+      document.getElementById("adminSocialList").innerHTML = state.socials.map(s => `<div class="item-row"><div><strong>${escapeHtml(s.name)}</strong> — <span style="color:var(--muted);font-size:0.85rem;">${escapeHtml(s.url)}</span></div><button class="btn btn-danger btn-sm" onclick="deleteSocial('${s.id}')">حذف</button></div>`).join("");
+    }
+
+    async function addArticle() {
+      const title = document.getElementById("artTitle").value.trim();
+      const tag = document.getElementById("artTag").value.trim() || "مقال يومي";
+      const body = document.getElementById("artBody").value.trim();
+      const urlInput = document.getElementById("artImgUrl").value.trim();
+      const fileInput = document.getElementById("artImgFile").files[0];
+      if (!title || !body) return alert("يرجى إدخال عنوان المقال ونصه.");
+      const image = fileInput ? await readFileAsDataUrl(fileInput) : (urlInput || "");
+      state.articles.unshift({ id: "a_" + Date.now(), title, tag, body, image });
+      ["artTitle", "artTag", "artBody", "artImgUrl", "artImgFile"].forEach(id => document.getElementById(id).value = "");
+      saveLocalState();
+    }
+
+    function deleteArticle(id) { state.articles = state.articles.filter(a => a.id !== id); saveLocalState(); }
+
+    async function addBook() {
+      const title = document.getElementById("bookTitle").value.trim();
+      const price = document.getElementById("bookPrice").value.trim() || "متاح";
+      const desc = document.getElementById("bookDesc").value.trim();
+      const imgUrl = document.getElementById("bookImgUrl").value.trim();
+      const imgFile = document.getElementById("bookImgFile").files[0];
+      const fileUrl = document.getElementById("bookFileUrl").value.trim();
+      const docFile = document.getElementById("bookFileUpload").files[0];
+      if (!title) return alert("يرجى إدخال اسم الكتاب أو الملف.");
+      const image = imgFile ? await readFileAsDataUrl(imgFile) : (imgUrl || "");
+      const fileData = docFile ? await readFileAsDataUrl(docFile) : "";
+      const fileName = docFile ? docFile.name : "";
+      state.books.unshift({ id: "b_" + Date.now(), title, price, desc, image, fileUrl, fileData, fileName });
+      ["bookTitle", "bookPrice", "bookDesc", "bookImgUrl", "bookImgFile", "bookFileUrl", "bookFileUpload"].forEach(id => document.getElementById(id).value = "");
+      saveLocalState();
+    }
+
+    function deleteBook(id) { state.books = state.books.filter(b => b.id !== id); saveLocalState(); }
+
+    function saveContactSettings() {
+      state.siteName = document.getElementById("cfgName").value.trim() || "وحيد صالح";
+      state.whatsapp = document.getElementById("cfgWhatsapp").value.trim();
+      state.siteBio = document.getElementById("cfgBio").value.trim();
+      state.consultationText = document.getElementById("cfgConsultText").value.trim();
+      saveLocalState();
+      alert("تم حفظ إعدادات التواصل بنجاح.");
+    }
+
+    function addSocialLink() {
+      const name = document.getElementById("socName").value.trim();
+      const url = document.getElementById("socUrl").value.trim();
+      if (!name || !url) return alert("يرجى إدخال اسم المنصة والرابط.");
+      state.socials.push({ id: "s_" + Date.now(), name, url });
+      document.getElementById("socName").value = "";
+      document.getElementById("socUrl").value = "";
+      saveLocalState();
+    }
+
+    function deleteSocial(id) { state.socials = state.socials.filter(s => s.id !== id); saveLocalState(); }
+
+    function exportBackup() {
+      const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "wahidsalh7-backup.json";
+      a.click();
+    }
+
+    function importBackup(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          state = { ...structuredClone(DEFAULT_STATE), ...JSON.parse(reader.result) };
+          saveLocalState();
+          alert("تم استيراد النسخة الاحتياطية بنجاح.");
+        } catch { alert("ملف JSON غير صالح."); }
+      };
+      reader.readAsText(file);
+    }
+
+    function toggleSection(id, btn) {
+      const el = document.getElementById(id);
+      const hidden = el.style.display === "none";
+      el.style.display = hidden ? "" : "none";
+      btn.textContent = hidden ? "طي / فتح" : "فتح القسم";
+    }
+
+    function switchTab(tabId, btn) {
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+      document.querySelectorAll(".tab-content").forEach(t => t.classList.remove("active"));
+      btn.classList.add("active");
+      document.getElementById(tabId).classList.add("active");
+    }
+
+    function openPinModal() {
+      if (isUnlocked) {
+        document.getElementById("adminPanel").classList.add("active");
+        renderAdminLists();
+        document.getElementById("adminPanel").scrollIntoView({ behavior: "smooth" });
+        return;
+      }
+      document.getElementById("pinError").textContent = "";
+      document.getElementById("pinInput").value = "";
+      document.getElementById("pinModal").classList.add("open");
+      setTimeout(() => document.getElementById("pinInput").focus(), 80);
+    }
+
+    function closePinModal() { document.getElementById("pinModal").classList.remove("open"); }
+
+    function verifyPin() {
+      if (document.getElementById("pinInput").value.trim() === ADMIN_PIN) {
+        isUnlocked = true;
+        closePinModal();
+        const panel = document.getElementById("adminPanel");
+        panel.classList.add("active");
+        renderAdminLists();
+        panel.scrollIntoView({ behavior: "smooth" });
+      } else { document.getElementById("pinError").textContent = "رمز PIN غير صحيح."; }
+    }
+
+    function lockAdmin() { isUnlocked = false; document.getElementById("adminPanel").classList.remove("active"); }
+
+    renderAll();
+    const initSb = getSupabaseConfig();
+    if (initSb.url && initSb.key) pullFromSupabase();
+  </script>
 </body>
 </html>
