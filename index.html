@@ -6,507 +6,364 @@
   <title>وحيد صالح | مدرب وعي ومؤلف كتب</title>
   <style>
     :root {
-      --bg: #f8f5ff;
-      --surface: #ffffff;
-      --surface-2: #f2ecff;
-      --text: #1f1633;
-      --muted: #655b7d;
-      --accent: #6c47ff;
-      --accent-dark: #4b28d6;
-      --accent-soft: #ebe4ff;
-      --border: #e1d8f8;
-      --danger: #c62828;
-      --success: #1b5e20;
+      --bg: #f6f2ff;
+      --card: #ffffff;
+      --soft: #efe9ff;
+      --text: #1c1233;
+      --muted: #5f5578;
+      --purple: #5b34eb;
+      --purple-deep: #24114b;
+      --purple-light: #8a6bff;
+      --border: #dfd5fa;
+      --danger: #b91c1c;
+      --ok: #15803d;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.85; }
-    a { color: var(--accent); text-decoration: none; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Tahoma, sans-serif;
+      background: radial-gradient(circle at top, #ede4ff 0%, var(--bg) 45%, #f9f7ff 100%);
+      color: var(--text);
+      line-height: 1.8;
+      min-height: 100vh;
+    }
+    a { color: var(--purple); text-decoration: none; }
     img { max-width: 100%; display: block; }
-    header { background: linear-gradient(140deg, #241347, #5632e8 55%, #7c5cff); color: #fff; padding: 60px 20px 52px; text-align: center; }
-    .top-bar { max-width: 1040px; margin: 0 auto 22px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
-    .brand-tag, .admin-trigger { background: rgba(255,255,255,0.16); color: #fff; border: 1px solid rgba(255,255,255,0.32); padding: 6px 14px; border-radius: 999px; font-size: 0.85rem; font-weight: 700; cursor: pointer; }
-    header h1 { font-size: 2.15rem; margin-bottom: 10px; }
-    header p { max-width: 680px; margin: 0 auto 22px; opacity: 0.95; }
-    .hero-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
-    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 20px; border-radius: 999px; font-weight: 700; font-size: 0.9rem; border: none; cursor: pointer; }
-    .btn-primary { background: #fff; color: #241347; }
-    .btn-accent { background: var(--accent); color: #fff; }
-    .btn-soft { background: var(--accent-soft); color: var(--accent-dark); }
-    .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
-    .btn-danger { background: #fdecec; color: var(--danger); }
-    .btn-sm { padding: 6px 12px; font-size: 0.82rem; }
-    .container { max-width: 1040px; margin: 0 auto; padding: 34px 20px; }
-    .section { margin-bottom: 32px; }
-    .section-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 14px; }
-    .section-title { font-size: 1.4rem; color: #241347; }
-    .collapse-btn { background: var(--surface); border: 1px solid var(--border); color: var(--accent-dark); padding: 5px 12px; border-radius: 999px; font-size: 0.82rem; font-weight: 700; cursor: pointer; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 18px; }
-    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; overflow: hidden; display: flex; flex-direction: column; }
-    .card-cover { width: 100%; height: 180px; object-fit: cover; background: var(--surface-2); }
-    .card-body { padding: 18px; flex: 1; display: flex; flex-direction: column; }
-    .badge { display: inline-block; background: var(--accent-soft); color: var(--accent-dark); padding: 3px 10px; border-radius: 999px; font-size: 0.78rem; font-weight: 700; margin-bottom: 8px; align-self: flex-start; }
-    .card h3 { font-size: 1.12rem; margin-bottom: 8px; color: #241347; }
-    .card p { color: var(--muted); font-size: 0.93rem; flex: 1; white-space: pre-line; }
-    .card-footer { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
-    .price-tag { font-weight: 700; color: var(--accent-dark); }
-    .box { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 24px; }
-    .social-list { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
-    .social-chip { background: var(--surface-2); border: 1px solid var(--border); color: #241347; padding: 8px 15px; border-radius: 999px; font-weight: 700; font-size: 0.88rem; }
-    .admin-panel { display: none; background: var(--surface); border: 2px solid var(--accent); border-radius: 22px; padding: 22px; margin-top: 26px; }
-    .admin-panel.active { display: block; }
-    .admin-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin: 14px 0 18px; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
-    .tab-btn { padding: 8px 15px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface-2); color: var(--text); font-weight: 700; cursor: pointer; font-size: 0.86rem; }
-    .tab-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
-    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; }
-    .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
-    .field label { font-weight: 700; font-size: 0.86rem; color: #241347; }
-    .field input, .field textarea { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 12px; font-family: inherit; font-size: 0.92rem; background: #fcfaff; color: var(--text); }
-    .field textarea { min-height: 90px; resize: vertical; }
-    .item-list { margin-top: 16px; display: flex; flex-direction: column; gap: 10px; }
-    .item-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 14px; background: var(--surface-2); flex-wrap: wrap; }
-    .status-msg { margin-top: 10px; font-size: 0.88rem; font-weight: 700; }
-    .ok { color: var(--success); }
-    .err { color: var(--danger); }
-    .modal-backdrop { position: fixed; inset: 0; background: rgba(20,10,42,0.55); display: none; align-items: center; justify-content: center; padding: 16px; z-index: 999; }
-    .modal-backdrop.open { display: flex; }
-    .modal-box { background: var(--surface); border-radius: 20px; padding: 22px; width: 100%; max-width: 360px; border: 1px solid var(--border); }
-    footer { text-align: center; padding: 26px 16px; color: var(--muted); font-size: 0.9rem; }
+
+    /* Hero */
+    .hero {
+      background: linear-gradient(135deg, #1b0b3b 0%, #3e1fb5 52%, #6d4aff 100%);
+      color: #fff;
+      padding: 28px 20px 64px;
+      border-bottom-left-radius: 32px;
+      border-bottom-right-radius: 32px;
+      box-shadow: 0 18px 40px rgba(36, 17, 75, 0.18);
+    }
+    .topbar {
+      max-width: 1080px;
+      margin: 0 auto 38px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .pill-status {
+      background: rgba(255, 255, 255, 0.14);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      backdrop-filter: blur(8px);
+    }
+    .admin-btn {
+      background: #fff;
+      color: var(--purple-deep);
+      border: none;
+      padding: 7px 16px;
+      border-radius: 999px;
+      font-size: 0.84rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+    }
+    .hero-inner {
+      max-width: 780px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.16);
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      padding: 5px 16px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      margin-bottom: 14px;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 14px;
+    }
+    .hero p {
+      font-size: 1.05rem;
+      opacity: 0.94;
+      max-width: 640px;
+      margin: 0 auto 26px;
+    }
+    .hero-btns {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 11px 22px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      border: none;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+    .btn-light { background: #fff; color: var(--purple-deep); }
+    .btn-ghost { background: rgba(255,255,255,0.14); color: #fff; border: 1px solid rgba(255,255,255,0.3); }
+    .btn-purple { background: var(--purple); color: #fff; }
+    .btn-purple:hover { background: #4824cf; }
+    .btn-soft { background: var(--soft); color: var(--purple-deep); }
+    .btn-line { background: #fff; color: var(--text); border: 1px solid var(--border); }
+    .btn-del { background: #fee2e2; color: var(--danger); }
+    .btn-sm { padding: 7px 14px; font-size: 0.82rem; }
+
+    /* Layout */
+    .wrap { max-width: 1080px; margin: 0 auto; padding: 42px 20px 64px; }
+    .sec { margin-bottom: 44px; }
+    .sec-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    .sec-title { font-size: 1.5rem; font-weight: 800; color: var(--purple-deep); }
+    .toggle-sec {
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--purple);
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 22px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 10px 28px rgba(42, 19, 97, 0.05);
+    }
+    .card-img {
+      width: 100%;
+      height: 195px;
+      object-fit: cover;
+      background: linear-gradient(135deg, #ece3ff, #f7f3ff);
+    }
+    .card-placeholder {
+      height: 110px;
+      background: linear-gradient(135deg, #efe8ff, #faf7ff);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 22px;
+      color: var(--purple);
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+    .card-body { padding: 22px; flex: 1; display: flex; flex-direction: column; }
+    .tag {
+      display: inline-block;
+      background: var(--soft);
+      color: var(--purple);
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      align-self: flex-start;
+    }
+    .card h3 { font-size: 1.2rem; color: var(--purple-deep); margin-bottom: 10px; }
+    .card p { color: var(--muted); font-size: 0.95rem; flex: 1; white-space: pre-line; }
+    .card-foot {
+      margin-top: 18px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .price { font-weight: 800; color: var(--purple-deep); font-size: 0.95rem; }
+
+    /* Contact & Social */
+    .contact-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: 0 10px 28px rgba(42, 19, 97, 0.05);
+    }
+    .socials { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+    .soc-link {
+      background: var(--soft);
+      color: var(--purple-deep);
+      border: 1px solid var(--border);
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.88rem;
+    }
+    .soc-link:hover { background: var(--purple); color: #fff; }
+    .adm { display:none; background:var(--card); border:2px solid var(--p); border-radius:22px; padding:24px; margin-top:28px; }
+    .adm.open { display:block; }
+    .tabs { display:flex; gap:8px; flex-wrap:wrap; margin:16px 0 20px; border-bottom:1px solid var(--b); padding-bottom:12px; }
+    .tab { padding:7px 15px; border-radius:999px; border:1px solid var(--b); background:var(--soft); color:var(--text); font-weight:700; cursor:pointer; font-size:.85rem; }
+    .tab.active { background:var(--p); color:#fff; border-color:var(--p); }
+    .pane { display:none; } .pane.active { display:block; }
+    .fg { display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:12px; }
+    .fld { display:flex; flex-direction:column; gap:6px; margin-bottom:12px; }
+    .fld label { font-weight:700; font-size:.85rem; color:var(--pd); }
+    .fld input,.fld textarea { width:100%; padding:10px 12px; border:1px solid var(--b); border-radius:12px; font-family:inherit; font-size:.92rem; background:#fbf9ff; color:var(--text); }
+    .fld textarea { min-height:88px; resize:vertical; }
+    .list { margin-top:14px; display:flex; flex-direction:column; gap:10px; }
+    .row { display:flex; justify-content:space-between; align-items:center; gap:10px; padding:11px 14px; border-radius:14px; background:var(--soft); flex-wrap:wrap; }
+    .msg { margin-top:10px; font-size:.88rem; font-weight:700; }
+    .ok { color:var(--ok); } .err { color:var(--del); }
+    .modal { position:fixed; inset:0; background:rgba(20,10,42,.55); display:none; align-items:center; justify-content:center; padding:16px; z-index:999; }
+    .modal.open { display:flex; }
+    .mcard { background:var(--card); border-radius:20px; padding:22px; width:100%; max-width:350px; border:1px solid var(--b); }
+    footer { text-align:center; padding:26px 16px; color:var(--muted); font-size:.9rem; }
   </style>
 </head>
 <body>
-  <header>
-    <div class="top-bar">
-      <span class="brand-tag" id="syncBadge">حفظ محلي نشط</span>
-      <button class="admin-trigger" onclick="openPinModal()">لوحة التحكم</button>
-    </div>
-    <h1 id="siteName">وحيد صالح</h1>
-    <p id="siteBio">مدرب وعي ومؤلف كتب — مساحة روحانية وتأملية للوعي الذاتي، المقالات اليومية، الكتب، وجلسات الاستشارة.</p>
-    <div class="hero-actions">
-      <a class="btn btn-primary" href="#consultations">حجز استشارة</a>
-      <a class="btn btn-primary" id="heroWhatsappBtn" href="https://wa.me/" target="_blank" rel="noopener">واتساب مباشر</a>
-      <a class="btn btn-primary" href="#books">الكتب والملفات</a>
+  <header class="hero">
+    <div class="top"><span class="pill" id="syncPill">حفظ محلي نشط</span><button class="adm-btn" onclick="openPin()">لوحة التحكم</button></div>
+    <div class="hero-c">
+      <div class="pill" style="margin-bottom:12px;">وعي ذاتي • كتابة • استشارات</div>
+      <h1 id="heroName">وحيد صالح</h1>
+      <p id="heroBio">مدرب وعي ومؤلف كتب — مساحة هادئة للوعي الذاتي، المقالات اليومية، الكتب والملفات، وجلسات الاستشارة.</p>
+      <div class="btns">
+        <a class="btn btn-w" href="#consultations">حجز استشارة</a>
+        <a class="btn btn-g" id="heroWa" href="https://wa.me/" target="_blank" rel="noopener">واتساب مباشر</a>
+        <a class="btn btn-g" href="#books">الكتب والملفات</a>
+      </div>
     </div>
   </header>
-
-  <main class="container">
-    <section class="section" id="articles">
-      <div class="section-head">
-        <h2 class="section-title">المقالات اليومية</h2>
-        <button class="collapse-btn" onclick="toggleSection('articlesList', this)">طي / فتح</button>
-      </div>
-      <div class="grid" id="articlesList"></div>
+  <main class="wrap">
+    <section class="sec" id="articles"><div class="sec-h"><h2 class="sec-t">المقالات اليومية</h2><button class="tgl" onclick="tglSec('artGrid',this)">طي / فتح</button></div><div class="grid" id="artGrid"></div></section>
+    <section class="sec" id="books"><div class="sec-h"><h2 class="sec-t">الكتب والملفات</h2><button class="tgl" onclick="tglSec('bookGrid',this)">طي / فتح</button></div><div class="grid" id="bookGrid"></div></section>
+    <section class="sec box" id="consultations">
+      <h2 class="sec-t">الاستشارات والتواصل المباشر</h2>
+      <p id="consultDesc" style="color:var(--muted);margin-top:8px;"></p>
+      <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;"><a class="btn btn-p" id="waBtn" href="https://wa.me/" target="_blank" rel="noopener">تواصل عبر واتساب</a><span id="waTxt" style="font-weight:700;color:var(--muted);"></span></div>
+      <div class="socs" id="socPub"></div>
     </section>
-
-    <section class="section" id="books">
-      <div class="section-head">
-        <h2 class="section-title">الكتب والملفات</h2>
-        <button class="collapse-btn" onclick="toggleSection('booksList', this)">طي / فتح</button>
+    <section class="adm" id="admBox">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;"><h2 class="sec-t">لوحة التحكم الكاملة</h2><button class="btn btn-l btn-sm" onclick="lockAdm()">إغلاق</button></div>
+      <div class="tabs">
+        <button class="tab active" onclick="openTab('t1',this)">المقالات</button><button class="tab" onclick="openTab('t2',this)">الكتب والملفات</button>
+        <button class="tab" onclick="openTab('t3',this)">الواتساب والسوشيل</button><button class="tab" onclick="openTab('t4',this)">Supabase ونسخ احتياطي</button>
       </div>
-      <div class="grid" id="booksList"></div>
-    </section>
-
-    <section class="section box" id="consultations">
-      <h2 class="section-title">الاستشارات والتواصل المباشر</h2>
-      <p id="consultationText" style="color:var(--muted);margin-top:6px;">جلسات فردية للوعي الذاتي ومرافقة المسار الداخلي، مع إمكانية التواصل المباشر عبر الواتساب لحجز المواعيد أو طلب الكتب.</p>
-      <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
-        <a class="btn btn-accent" id="whatsappMainLink" href="https://wa.me/" target="_blank" rel="noopener">تواصل عبر واتساب</a>
-        <span id="whatsappDisplay" style="font-weight:700;color:var(--muted);"></span>
+      <div class="pane active" id="t1">
+        <div class="fg"><div class="fld"><label>عنوان المقال</label><input id="aTitle" /></div><div class="fld"><label>التصنيف</label><input id="aTag" placeholder="تأمل يومي" /></div><div class="fld"><label>رابط صورة</label><input id="aUrl" placeholder="https://..." /></div><div class="fld"><label>أو صورة من الجهاز</label><input type="file" id="aFile" accept="image/*" /></div></div>
+        <div class="fld"><label>نص المقال</label><textarea id="aBody"></textarea></div>
+        <button class="btn btn-p" onclick="addArt()">نشر المقال</button><div class="list" id="lArt"></div>
       </div>
-      <div class="social-list" id="socialLinksPublic"></div>
-    </section>
-
-    <section class="admin-panel" id="adminPanel">
-      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
-        <div>
-          <h2 class="section-title">لوحة التحكم الكاملة</h2>
-          <p style="color:var(--muted);font-size:0.86rem;">إدارة المقالات، الكتب والملفات، الصور، الواتساب، السوشيل ميديا، والربط السحابي.</p>
-        </div>
-        <button class="btn btn-outline btn-sm" onclick="lockAdmin()">إغلاق اللوحة</button>
+      <div class="pane" id="t2">
+        <div class="fg"><div class="fld"><label>اسم الكتاب أو الملف</label><input id="bTitle" /></div><div class="fld"><label>السعر / الحالة</label><input id="bPrice" placeholder="متاح للطلب" /></div><div class="fld"><label>رابط غلاف</label><input id="bImgUrl" placeholder="https://..." /></div><div class="fld"><label>أو صورة غلاف</label><input type="file" id="bImgFile" accept="image/*" /></div><div class="fld"><label>رابط ملف</label><input id="bFileUrl" placeholder="https://..." /></div><div class="fld"><label>أو ملف من الجهاز</label><input type="file" id="bFileUp" /></div></div>
+        <div class="fld"><label>الوصف</label><textarea id="bDesc"></textarea></div>
+        <button class="btn btn-p" onclick="addBook()">إضافة الكتاب / الملف</button><div class="list" id="lBook"></div>
       </div>
-
-      <div class="admin-tabs">
-        <button class="tab-btn active" onclick="switchTab('tabArticles', this)">المقالات اليومية</button>
-        <button class="tab-btn" onclick="switchTab('tabBooks', this)">الكتب والملفات</button>
-        <button class="tab-btn" onclick="switchTab('tabContact', this)">الواتساب والسوشيل ميديا</button>
-        <button class="tab-btn" onclick="switchTab('tabCloud', this)">Supabase والنسخ الاحتياطي</button>
+      <div class="pane" id="t3">
+        <div class="fg"><div class="fld"><label>الاسم الظاهر</label><input id="cName" /></div><div class="fld"><label>رقم الواتساب (دولي بدون +)</label><input id="cWa" placeholder="628123456789" /></div></div>
+        <div class="fld"><label>النبذة</label><textarea id="cBio"></textarea></div><div class="fld"><label>نص الاستشارات</label><textarea id="cCon"></textarea></div>
+        <button class="btn btn-p" onclick="saveCon()">حفظ التواصل</button>
+        <hr style="margin:18px 0;border:none;border-top:1px solid var(--b);" />
+        <div class="fg"><div class="fld"><label>اسم المنصة</label><input id="sName" placeholder="إنستغرام، تيك توك..." /></div><div class="fld"><label>الرابط</label><input id="sUrl" placeholder="https://..." /></div></div>
+        <button class="btn btn-s" onclick="addSoc()">إضافة رابط منصة</button><div class="list" id="lSoc"></div>
       </div>
-
-      <div class="tab-content active" id="tabArticles">
-        <div class="form-grid">
-          <div class="field"><label>عنوان المقال</label><input type="text" id="artTitle" /></div>
-          <div class="field"><label>التصنيف</label><input type="text" id="artTag" placeholder="مثال: تأمل يومي" /></div>
-          <div class="field"><label>رابط صورة المقال (اختياري)</label><input type="text" id="artImgUrl" placeholder="https://..." /></div>
-          <div class="field"><label>أو ارفع صورة من الجهاز</label><input type="file" id="artImgFile" accept="image/*" /></div>
-        </div>
-        <div class="field"><label>نص المقال</label><textarea id="artBody"></textarea></div>
-        <button class="btn btn-accent" onclick="addArticle()">إضافة المقال ونشره</button>
-        <div class="item-list" id="adminArticlesList"></div>
-      </div>
-
-      <div class="tab-content" id="tabBooks">
-        <div class="form-grid">
-          <div class="field"><label>اسم الكتاب أو الملف</label><input type="text" id="bookTitle" /></div>
-          <div class="field"><label>السعر أو الحالة</label><input type="text" id="bookPrice" placeholder="مثال: متاح للطلب" /></div>
-          <div class="field"><label>رابط صورة الغلاف (اختياري)</label><input type="text" id="bookImgUrl" placeholder="https://..." /></div>
-          <div class="field"><label>أو ارفع صورة غلاف</label><input type="file" id="bookImgFile" accept="image/*" /></div>
-          <div class="field"><label>رابط ملف الكتاب (اختياري)</label><input type="text" id="bookFileUrl" placeholder="https://..." /></div>
-          <div class="field"><label>أو ارفع ملفاً من الجهاز</label><input type="file" id="bookFileUpload" /></div>
-        </div>
-        <div class="field"><label>وصف الكتاب أو الملف</label><textarea id="bookDesc"></textarea></div>
-        <button class="btn btn-accent" onclick="addBook()">إضافة الكتاب / الملف</button>
-        <div class="item-list" id="adminBooksList"></div>
-      </div>
-
-      <div class="tab-content" id="tabContact">
-        <div class="form-grid">
-          <div class="field"><label>اسم الموقع / الاسم الظاهر</label><input type="text" id="cfgName" /></div>
-          <div class="field"><label>رقم الواتساب (دولي بدون +)</label><input type="text" id="cfgWhatsapp" placeholder="628123456789" /></div>
-        </div>
-        <div class="field"><label>النبذة التعريفية</label><textarea id="cfgBio"></textarea></div>
-        <div class="field"><label>نص قسم الاستشارات</label><textarea id="cfgConsultText"></textarea></div>
-        <button class="btn btn-accent" onclick="saveContactSettings()">حفظ بيانات التواصل</button>
-
-        <hr style="margin:20px 0;border:none;border-top:1px solid var(--border);" />
-        <h3 style="margin-bottom:10px;">إضافة رابط سوشيل ميديا</h3>
-        <div class="form-grid">
-          <div class="field"><label>اسم المنصة</label><input type="text" id="socName" placeholder="إنستغرام، تيك توك، يوتيوب..." /></div>
-          <div class="field"><label>الرابط الكامل</label><input type="text" id="socUrl" placeholder="https://..." /></div>
-        </div>
-        <button class="btn btn-soft" onclick="addSocialLink()">إضافة رابط المنصة</button>
-        <div class="item-list" id="adminSocialList"></div>
-      </div>
-
-      <div class="tab-content" id="tabCloud">
-        <div class="form-grid">
-          <div class="field"><label>Supabase Project URL</label><input type="text" id="sbUrl" placeholder="https://xxxx.supabase.co" /></div>
-          <div class="field"><label>Supabase Anon Key</label><input type="text" id="sbKey" placeholder="eyJhbGciOi..." /></div>
-        </div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;">
-          <button class="btn btn-accent" onclick="saveSupabaseConfig()">حفظ إعدادات Supabase</button>
-          <button class="btn btn-soft" onclick="pushToSupabase()">رفع إلى السحابة</button>
-          <button class="btn btn-outline" onclick="pullFromSupabase()">جلب من السحابة</button>
-        </div>
-        <div id="cloudStatus" class="status-msg"></div>
-
-        <hr style="margin:20px 0;border:none;border-top:1px solid var(--border);" />
-        <h3 style="margin-bottom:10px;">نسخة احتياطية (JSON)</h3>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
-          <button class="btn btn-soft btn-sm" onclick="exportBackup()">تحميل نسخة احتياطية</button>
-          <input type="file" id="importJsonFile" accept="application/json" onchange="importBackup(event)" style="max-width:250px;" />
-        </div>
+      <div class="pane" id="t4">
+        <div class="fg"><div class="fld"><label>Supabase URL</label><input id="sbUrl" placeholder="https://xxxx.supabase.co" /></div><div class="fld"><label>Supabase Anon Key</label><input id="sbKey" placeholder="eyJ..." /></div></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;"><button class="btn btn-p" onclick="saveSb()">حفظ Supabase</button><button class="btn btn-s" onclick="pushSb()">رفع للسحابة</button><button class="btn btn-l" onclick="pullSb()">جلب من السحابة</button></div>
+        <div id="sbMsg" class="msg"></div>
+        <hr style="margin:18px 0;border:none;border-top:1px solid var(--b);" />
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;"><button class="btn btn-s btn-sm" onclick="expJ()">تصدير JSON</button><input type="file" id="impJ" accept="application/json" onchange="impJson(event)" style="max-width:230px;" /></div>
       </div>
     </section>
   </main>
-
-  <div class="modal-backdrop" id="pinModal">
-    <div class="modal-box">
-      <h3 style="margin-bottom:8px;">دخول لوحة التحكم</h3>
-      <p style="color:var(--muted);font-size:0.86rem;margin-bottom:12px;">أدخل رمز PIN للوصول إلى الإدارة.</p>
-      <div class="field"><label>رمز PIN</label><input type="password" id="pinInput" inputmode="numeric" placeholder="••••" /></div>
-      <div style="display:flex;gap:8px;justify-content:flex-end;">
-        <button class="btn btn-outline btn-sm" onclick="closePinModal()">إلغاء</button>
-        <button class="btn btn-accent btn-sm" onclick="verifyPin()">دخول</button>
-      </div>
-      <div id="pinError" class="status-msg err"></div>
-    </div>
-  </div>
-
+  <div class="modal" id="pMod"><div class="mcard"><h3 style="margin-bottom:8px;">رمز الدخول</h3><div class="fld"><label>PIN</label><input type="password" id="pIn" inputmode="numeric" /></div><div style="display:flex;gap:8px;justify-content:flex-end;"><button class="btn btn-l btn-sm" onclick="closePin()">إلغاء</button><button class="btn btn-p btn-sm" onclick="chkPin()">دخول</button></div><div id="pErr" class="msg err"></div></div></div>
   <footer>wahidsalh7 — جميع الحقوق محفوظة</footer>
   <script>
-    const ADMIN_PIN = "1993";
-    const STORAGE_KEY = "wahidsalh7_site_state_v1";
-    const SB_CFG_KEY = "wahidsalh7_supabase_cfg_v1";
-
-    const DEFAULT_STATE = {
-      siteName: "وحيد صالح",
-      siteBio: "مدرب وعي ومؤلف كتب — مساحة روحانية وتأملية للوعي الذاتي، المقالات اليومية، الكتب، وجلسات الاستشارة.",
-      consultationText: "جلسات فردية للوعي الذاتي ومرافقة المسار الداخلي، مع إمكانية التواصل المباشر عبر الواتساب لحجز المواعيد أو طلب الكتب.",
-      whatsapp: "",
-      socials: [
-        { id: "s1", name: "إنستغرام", url: "https://instagram.com" },
-        { id: "s2", name: "تيك توك", url: "https://tiktok.com" },
-        { id: "s3", name: "فيسبوك", url: "https://facebook.com" }
-      ],
-      articles: [
-        { id: "a1", title: "الإنصات للهدوء الداخلي", tag: "تأمل يومي", image: "", body: "كيف نلاحظ الضجيج الذهني دون صراع معه، ونعود إلى لحظة الحضور الواعي والسكينة." },
-        { id: "a2", title: "مرآة العلاقات والحدود", tag: "وعي ذاتي", image: "", body: "قراءة هادئة لما تكشفه مواقف الحياة اليومية عن اتزاننا الداخلي ووضوح مسارنا." }
-      ],
-      books: [
-        { id: "b1", title: "مفاتيح الوعي والسكينة", price: "متاح للطلب المباشر", image: "", fileData: "", fileName: "", fileUrl: "", desc: "رحلة مكتوبة لفهم الذات وتعميق الحضور والوضوح النفسي والروحي." }
-      ]
+    const PIN="1993", SK="ws7_st", CK="ws7_sb";
+    const DEF={ siteName:"وحيد صالح", siteBio:"مدرب وعي ومؤلف كتب — مساحة هادئة للوعي الذاتي، المقالات اليومية، الكتب والملفات، وجلسات الاستشارة.", consultDesc:"جلسات فردية للوعي الذاتي ومرافقة المسار الداخلي عبر الواتساب.", whatsapp:"",
+      socials:[{id:"1",name:"إنستغرام",url:"https://instagram.com"},{id:"2",name:"تيك توك",url:"https://tiktok.com"},{id:"3",name:"فيسبوك",url:"https://facebook.com"}],
+      articles:[{id:"a1",title:"الإنصات للهدوء الداخلي",tag:"تأمل يومي",image:"",body:"نلاحظ الضجيج الذهني بهدوء ونعود إلى الحضور الواعي والاتزان الداخلي."},{id:"a2",title:"مرآة العلاقات والحدود",tag:"وعي ذاتي",image:"",body:"قراءة واعية لما تكشفه مواقف الحياة اليومية عن صفائنا الداخلي."}],
+      books:[{id:"b1",title:"مفاتيح الوعي والسكينة",price:"متاح للطلب المباشر",image:"",fileData:"",fileName:"",fileUrl:"",desc:"كتاب تأملي في الوعي الذاتي والسكينة الداخلية."}]
     };
-
-    let state = loadLocalState();
-    let isUnlocked = false;
-
-    function loadLocalState() {
-      try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (!raw) return structuredClone(DEFAULT_STATE);
-        return { ...structuredClone(DEFAULT_STATE), ...JSON.parse(raw) };
-      } catch { return structuredClone(DEFAULT_STATE); }
+    let st=loadSt(), openAd=false;
+    function loadSt(){ try{ const r=localStorage.getItem(SK); return r?{...structuredClone(DEF),...JSON.parse(r)}:structuredClone(DEF); }catch{ return structuredClone(DEF); } }
+    function saveSt(){ localStorage.setItem(SK,JSON.stringify(st)); render(); const sb=getSb(); if(sb.url&&sb.key) pushSb(true); }
+    function getSb(){ try{ return JSON.parse(localStorage.getItem(CK)||"{}"); }catch{ return {}; } }
+    function saveSb(){ const url=sbUrl.value.trim().replace(/\/+$/,""), key=sbKey.value.trim(); localStorage.setItem(CK,JSON.stringify({url,key})); setMsg(url&&key?"تم الحفظ.":"تم المسح.",true); pill(); }
+    function setMsg(t,ok){ sbMsg.textContent=t; sbMsg.className="msg "+(ok?"ok":"err"); }
+    function pill(){ const sb=getSb(); syncPill.textContent=(sb.url&&sb.key)?"مزامنة Supabase نشطة":"حفظ محلي نشط"; }
+    async function pushSb(sil=false){ const sb=getSb(); if(!sb.url||!sb.key){ if(!sil) setMsg("أدخل URL و Key.",false); return; }
+      try{ const b=JSON.stringify({id:"main",data:st,updated_at:new Date().toISOString()}), h={"Content-Type":"application/json","apikey":sb.key,"Authorization":"Bearer "+sb.key,"Prefer":"return=representation"};
+        let r=await fetch(`${sb.url}/rest/v1/site_state?id=eq.main`,{method:"PATCH",headers:h,body:b}); const rows=await r.json();
+        if(!Array.isArray(rows)||!rows.length) r=await fetch(`${sb.url}/rest/v1/site_state`,{method:"POST",headers:h,body:b});
+        if(!r.ok) throw 0; if(!sil) setMsg("تم الرفع للسحابة.",true); }catch{ if(!sil) setMsg("تعذر الرفع للسحابة.",false); } }
+    async function pullSb(){ const sb=getSb(); if(!sb.url||!sb.key){ setMsg("أدخل URL و Key.",false); return; }
+      try{ const r=await fetch(`${sb.url}/rest/v1/site_state?id=eq.main&select=data`,{headers:{"apikey":sb.key,"Authorization":"Bearer "+sb.key}}); const rows=await r.json();
+        if(Array.isArray(rows)&&rows[0]?.data){ st={...structuredClone(DEF),...rows[0].data}; localStorage.setItem(SK,JSON.stringify(st)); render(); setMsg("تم الجلب.",true); } else setMsg("لا يوجد سجل main.",false); }catch{ setMsg("تعذر الجلب.",false); } }
+    const toUrl=f=>new Promise((res,rej)=>{ if(!f) return res(""); const r=new FileReader(); r.onload=()=>res(r.result); r.onerror=rej; r.readAsDataURL(f); });
+    const esc=s=>String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+    const wa=()=> (st.whatsapp||"").replace(/[^\d]/g,"") ? "https://wa.me/"+(st.whatsapp||"").replace(/[^\d]/g,"") : "https://wa.me/";
+    function render(){
+      pill(); document.title=st.siteName+" | مدرب وعي ومؤلف كتب"; heroName.textContent=st.siteName; heroBio.textContent=st.siteBio; consultDesc.textContent=st.consultDesc;
+      const u=wa(); heroWa.href=u; waBtn.href=u; waTxt.textContent=st.whatsapp?"واتساب: "+st.whatsapp:"";
+      artGrid.innerHTML=st.articles.map(a=>`<article class="card">${a.image?`<img class="c-img" src="${esc(a.image)}" alt="${esc(a.title)}"/>`:`<div class="c-top">${esc(a.tag||"مقال يومي")}</div>`}<div class="c-body"><span class="tag">${esc(a.tag||"مقال يومي")}</span><h3>${esc(a.title)}</h3><p>${esc(a.body)}</p></div></article>`).join("");
+      bookGrid.innerHTML=st.books.map(b=>{ const h=b.fileUrl||b.fileData||""; const l=b.fileName?`تحميل: ${esc(b.fileName)}`:"فتح الملف";
+        return `<div class="card">${b.image?`<img class="c-img" src="${esc(b.image)}" alt="${esc(b.title)}"/>`:`<div class="c-top">كتاب / ملف</div>`}<div class="c-body"><span class="tag">إصدار</span><h3>${esc(b.title)}</h3><p>${esc(b.desc)}</p><div class="c-foot"><span class="price">${esc(b.price||"متاح")}</span><div style="display:flex;gap:6px;flex-wrap:wrap;">${h?`<a class="btn btn-s btn-sm" href="${esc(h)}" download="${esc(b.fileName||"file")}" target="_blank" rel="noopener">${l}</a>`:""}<a class="btn btn-p btn-sm" href="${u}" target="_blank" rel="noopener">طلب / استفسار</a></div></div></div></div>`; }).join("");
+      socPub.innerHTML=st.socials.map(s=>`<a class="soc" href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.name)}</a>`).join("");
+      if(openAd) rAdm();
     }
-
-    function saveLocalState() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-      renderAll();
-      const sb = getSupabaseConfig();
-      if (sb.url && sb.key) pushToSupabase(true);
+    function rAdm(){
+      cName.value=st.siteName; cWa.value=st.whatsapp; cBio.value=st.siteBio; cCon.value=st.consultDesc;
+      const sb=getSb(); sbUrl.value=sb.url||""; sbKey.value=sb.key||"";
+      lArt.innerHTML=st.articles.map(a=>`<div class="row"><strong>${esc(a.title)}</strong><button class="btn btn-d btn-sm" onclick="delA('${a.id}')">حذف</button></div>`).join("");
+      lBook.innerHTML=st.books.map(b=>`<div class="row"><strong>${esc(b.title)}</strong><button class="btn btn-d btn-sm" onclick="delB('${b.id}')">حذف</button></div>`).join("");
+      lSoc.innerHTML=st.socials.map(s=>`<div class="row"><strong>${esc(s.name)}</strong><button class="btn btn-d btn-sm" onclick="delS('${s.id}')">حذف</button></div>`).join("");
     }
-
-    function getSupabaseConfig() {
-      try { return JSON.parse(localStorage.getItem(SB_CFG_KEY) || "{}"); } catch { return {}; }
-    }
-
-    function saveSupabaseConfig() {
-      const url = document.getElementById("sbUrl").value.trim().replace(/\/+$/, "");
-      const key = document.getElementById("sbKey").value.trim();
-      localStorage.setItem(SB_CFG_KEY, JSON.stringify({ url, key }));
-      setCloudMsg(url && key ? "تم حفظ إعدادات Supabase محلياً." : "تم مسح إعدادات Supabase.", true);
-      updateSyncBadge();
-    }
-
-    function setCloudMsg(msg, ok = true) {
-      const el = document.getElementById("cloudStatus");
-      if (!el) return;
-      el.textContent = msg;
-      el.className = "status-msg " + (ok ? "ok" : "err");
-    }
-
-    function updateSyncBadge() {
-      const sb = getSupabaseConfig();
-      document.getElementById("syncBadge").textContent = (sb.url && sb.key) ? "مزامنة Supabase مفعّلة" : "حفظ محلي نشط";
-    }
-
-    async function pushToSupabase(silent = false) {
-      const sb = getSupabaseConfig();
-      if (!sb.url || !sb.key) {
-        if (!silent) setCloudMsg("يرجى إدخال Supabase URL و Anon Key أولاً.", false);
-        return;
-      }
-      try {
-        const payload = { id: "main", data: state, updated_at: new Date().toISOString() };
-        let res = await fetch(`${sb.url}/rest/v1/site_state?id=eq.main`, {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json", "apikey": sb.key, "Authorization": `Bearer ${sb.key}`, "Prefer": "return=representation" },
-          body: JSON.stringify(payload)
-        });
-        const rows = await res.json();
-        if (!Array.isArray(rows) || rows.length === 0) {
-          res = await fetch(`${sb.url}/rest/v1/site_state`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json", "apikey": sb.key, "Authorization": `Bearer ${sb.key}`, "Prefer": "return=representation" },
-            body: JSON.stringify(payload)
-          });
-        }
-        if (!res.ok) throw new Error();
-        if (!silent) setCloudMsg("تمت مزامنة البيانات مع Supabase بنجاح.", true);
-      } catch {
-        if (!silent) setCloudMsg("تعذر المزامنة: تأكد من جدول site_state وصلاحيات RLS.", false);
-      }
-    }
-
-    async function pullFromSupabase() {
-      const sb = getSupabaseConfig();
-      if (!sb.url || !sb.key) { setCloudMsg("يرجى إدخال Supabase URL و Anon Key أولاً.", false); return; }
-      try {
-        const res = await fetch(`${sb.url}/rest/v1/site_state?id=eq.main&select=data`, {
-          headers: { "apikey": sb.key, "Authorization": `Bearer ${sb.key}` }
-        });
-        const rows = await res.json();
-        if (Array.isArray(rows) && rows[0] && rows[0].data) {
-          state = { ...structuredClone(DEFAULT_STATE), ...rows[0].data };
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-          renderAll();
-          setCloudMsg("تم جلب أحدث البيانات من Supabase بنجاح.", true);
-        } else { setCloudMsg("لم يتم العثور على سجل باسم main في جدول site_state.", false); }
-      } catch { setCloudMsg("تعذر الجلب من Supabase.", false); }
-    }
-
-    function readFileAsDataUrl(file) {
-      return new Promise((resolve, reject) => {
-        if (!file) return resolve("");
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      });
-    }
-
-    function escapeHtml(str = "") {
-      return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-    }
-
-    function getWhatsappUrl() {
-      const clean = (state.whatsapp || "").replace(/[^\d]/g, "");
-      return clean ? `https://wa.me/${clean}` : "https://wa.me/";
-    }
-
-    function renderAll() {
-      updateSyncBadge();
-      document.title = `${state.siteName} | مدرب وعي ومؤلف كتب`;
-      document.getElementById("siteName").textContent = state.siteName;
-      document.getElementById("siteBio").textContent = state.siteBio;
-      document.getElementById("consultationText").textContent = state.consultationText;
-      const waUrl = getWhatsappUrl();
-      document.getElementById("heroWhatsappBtn").href = waUrl;
-      document.getElementById("whatsappMainLink").href = waUrl;
-      document.getElementById("whatsappDisplay").textContent = state.whatsapp ? `واتساب: ${state.whatsapp}` : "";
-
-      document.getElementById("articlesList").innerHTML = state.articles.length
-        ? state.articles.map(a => `<article class="card">${a.image ? `<img class="card-cover" src="${escapeHtml(a.image)}" alt="${escapeHtml(a.title)}" />` : ""}<div class="card-body"><span class="badge">${escapeHtml(a.tag || "مقال يومي")}</span><h3>${escapeHtml(a.title)}</h3><p>${escapeHtml(a.body)}</p></div></article>`).join("")
-        : `<div class="card"><div class="card-body"><p>لا توجد مقالات منشورة حالياً.</p></div></div>`;
-
-      document.getElementById("booksList").innerHTML = state.books.length
-        ? state.books.map(b => {
-          const href = b.fileUrl || b.fileData || "";
-          const label = b.fileName ? `تحميل: ${escapeHtml(b.fileName)}` : "فتح الملف / الكتاب";
-          return `<div class="card">${b.image ? `<img class="card-cover" src="${escapeHtml(b.image)}" alt="${escapeHtml(b.title)}" />` : ""}<div class="card-body"><span class="badge">إصدار / ملف</span><h3>${escapeHtml(b.title)}</h3><p>${escapeHtml(b.desc)}</p><div class="card-footer"><span class="price-tag">${escapeHtml(b.price || "متاح")}</span><div style="display:flex;gap:6px;flex-wrap:wrap;">${href ? `<a class="btn btn-soft btn-sm" href="${escapeHtml(href)}" download="${escapeHtml(b.fileName \vert{}\vert{} "file")}" target="_blank" rel="noopener">${label}</a>` : ""}<a class="btn btn-accent btn-sm" href="${waUrl}" target="_blank" rel="noopener">طلب / استفسار</a></div></div></div></div>`;
-        }).join("")
-        : `<div class="card"><div class="card-body"><p>لا توجد كتب أو ملفات مضافة حالياً.</p></div></div>`;
-
-      document.getElementById("socialLinksPublic").innerHTML = state.socials.map(s => `<a class="social-chip" href="${escapeHtml(s.url)}" target="_blank" rel="noopener">${escapeHtml(s.name)}</a>`).join("");
-      if (isUnlocked) renderAdminLists();
-    }
-
-    function renderAdminLists() {
-      document.getElementById("cfgName").value = state.siteName;
-      document.getElementById("cfgBio").value = state.siteBio;
-      document.getElementById("cfgConsultText").value = state.consultationText;
-      document.getElementById("cfgWhatsapp").value = state.whatsapp;
-      const sb = getSupabaseConfig();
-      document.getElementById("sbUrl").value = sb.url || "";
-      document.getElementById("sbKey").value = sb.key || "";
-
-      document.getElementById("adminArticlesList").innerHTML = state.articles.map(a => `<div class="item-row"><div><strong>${escapeHtml(a.title)}</strong> <span class="badge" style="margin:0 6px;">${escapeHtml(a.tag || "")}</span></div><button class="btn btn-danger btn-sm" onclick="deleteArticle('${a.id}')">حذف</button></div>`).join("");
-      document.getElementById("adminBooksList").innerHTML = state.books.map(b => `<div class="item-row"><div><strong>${escapeHtml(b.title)}</strong>${b.fileName ? ` — <span style="color:var(--muted);font-size:0.85rem;">${escapeHtml(b.fileName)}</span>` : ""}</div><button class="btn btn-danger btn-sm" onclick="deleteBook('${b.id}')">حذف</button></div>`).join("");
-      document.getElementById("adminSocialList").innerHTML = state.socials.map(s => `<div class="item-row"><div><strong>${escapeHtml(s.name)}</strong> — <span style="color:var(--muted);font-size:0.85rem;">${escapeHtml(s.url)}</span></div><button class="btn btn-danger btn-sm" onclick="deleteSocial('${s.id}')">حذف</button></div>`).join("");
-    }
-
-    async function addArticle() {
-      const title = document.getElementById("artTitle").value.trim();
-      const tag = document.getElementById("artTag").value.trim() || "مقال يومي";
-      const body = document.getElementById("artBody").value.trim();
-      const urlInput = document.getElementById("artImgUrl").value.trim();
-      const fileInput = document.getElementById("artImgFile").files[0];
-      if (!title || !body) return alert("يرجى إدخال عنوان المقال ونصه.");
-      const image = fileInput ? await readFileAsDataUrl(fileInput) : (urlInput || "");
-      state.articles.unshift({ id: "a_" + Date.now(), title, tag, body, image });
-      ["artTitle", "artTag", "artBody", "artImgUrl", "artImgFile"].forEach(id => document.getElementById(id).value = "");
-      saveLocalState();
-    }
-
-    function deleteArticle(id) { state.articles = state.articles.filter(a => a.id !== id); saveLocalState(); }
-
-    async function addBook() {
-      const title = document.getElementById("bookTitle").value.trim();
-      const price = document.getElementById("bookPrice").value.trim() || "متاح";
-      const desc = document.getElementById("bookDesc").value.trim();
-      const imgUrl = document.getElementById("bookImgUrl").value.trim();
-      const imgFile = document.getElementById("bookImgFile").files[0];
-      const fileUrl = document.getElementById("bookFileUrl").value.trim();
-      const docFile = document.getElementById("bookFileUpload").files[0];
-      if (!title) return alert("يرجى إدخال اسم الكتاب أو الملف.");
-      const image = imgFile ? await readFileAsDataUrl(imgFile) : (imgUrl || "");
-      const fileData = docFile ? await readFileAsDataUrl(docFile) : "";
-      const fileName = docFile ? docFile.name : "";
-      state.books.unshift({ id: "b_" + Date.now(), title, price, desc, image, fileUrl, fileData, fileName });
-      ["bookTitle", "bookPrice", "bookDesc", "bookImgUrl", "bookImgFile", "bookFileUrl", "bookFileUpload"].forEach(id => document.getElementById(id).value = "");
-      saveLocalState();
-    }
-
-    function deleteBook(id) { state.books = state.books.filter(b => b.id !== id); saveLocalState(); }
-
-    function saveContactSettings() {
-      state.siteName = document.getElementById("cfgName").value.trim() || "وحيد صالح";
-      state.whatsapp = document.getElementById("cfgWhatsapp").value.trim();
-      state.siteBio = document.getElementById("cfgBio").value.trim();
-      state.consultationText = document.getElementById("cfgConsultText").value.trim();
-      saveLocalState();
-      alert("تم حفظ إعدادات التواصل بنجاح.");
-    }
-
-    function addSocialLink() {
-      const name = document.getElementById("socName").value.trim();
-      const url = document.getElementById("socUrl").value.trim();
-      if (!name || !url) return alert("يرجى إدخال اسم المنصة والرابط.");
-      state.socials.push({ id: "s_" + Date.now(), name, url });
-      document.getElementById("socName").value = "";
-      document.getElementById("socUrl").value = "";
-      saveLocalState();
-    }
-
-    function deleteSocial(id) { state.socials = state.socials.filter(s => s.id !== id); saveLocalState(); }
-
-    function exportBackup() {
-      const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = "wahidsalh7-backup.json";
-      a.click();
-    }
-
-    function importBackup(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = () => {
-        try {
-          state = { ...structuredClone(DEFAULT_STATE), ...JSON.parse(reader.result) };
-          saveLocalState();
-          alert("تم استيراد النسخة الاحتياطية بنجاح.");
-        } catch { alert("ملف JSON غير صالح."); }
-      };
-      reader.readAsText(file);
-    }
-
-    function toggleSection(id, btn) {
-      const el = document.getElementById(id);
-      const hidden = el.style.display === "none";
-      el.style.display = hidden ? "" : "none";
-      btn.textContent = hidden ? "طي / فتح" : "فتح القسم";
-    }
-
-    function switchTab(tabId, btn) {
-      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-      document.querySelectorAll(".tab-content").forEach(t => t.classList.remove("active"));
-      btn.classList.add("active");
-      document.getElementById(tabId).classList.add("active");
-    }
-
-    function openPinModal() {
-      if (isUnlocked) {
-        document.getElementById("adminPanel").classList.add("active");
-        renderAdminLists();
-        document.getElementById("adminPanel").scrollIntoView({ behavior: "smooth" });
-        return;
-      }
-      document.getElementById("pinError").textContent = "";
-      document.getElementById("pinInput").value = "";
-      document.getElementById("pinModal").classList.add("open");
-      setTimeout(() => document.getElementById("pinInput").focus(), 80);
-    }
-
-    function closePinModal() { document.getElementById("pinModal").classList.remove("open"); }
-
-    function verifyPin() {
-      if (document.getElementById("pinInput").value.trim() === ADMIN_PIN) {
-        isUnlocked = true;
-        closePinModal();
-        const panel = document.getElementById("adminPanel");
-        panel.classList.add("active");
-        renderAdminLists();
-        panel.scrollIntoView({ behavior: "smooth" });
-      } else { document.getElementById("pinError").textContent = "رمز PIN غير صحيح."; }
-    }
-
-    function lockAdmin() { isUnlocked = false; document.getElementById("adminPanel").classList.remove("active"); }
-
-    renderAll();
-    const initSb = getSupabaseConfig();
-    if (initSb.url && initSb.key) pullFromSupabase();
+    async function addArt(){ const t=aTitle.value.trim(), bd=aBody.value.trim(); if(!t||!bd) return alert("أدخل العنوان والنص.");
+      const img=aFile.files[0]?await toUrl(aFile.files[0]):aUrl.value.trim();
+      st.articles.unshift({id:"a"+Date.now(),title:t,tag:aTag.value.trim()||"مقال يومي",body:bd,image:img});
+      [aTitle,aTag,aUrl,aFile,aBody].forEach(x=>x.value=""); saveSt(); }
+    function delA(id){ st.articles=st.articles.filter(x=>x.id!==id); saveSt(); }
+    async function addBook(){ const t=bTitle.value.trim(); if(!t) return alert("أدخل اسم الكتاب.");
+      const img=bImgFile.files[0]?await toUrl(bImgFile.files[0]):bImgUrl.value.trim();
+      const fd=bFileUp.files[0]?await toUrl(bFileUp.files[0]):""; const fn=bFileUp.files[0]?bFileUp.files[0].name:"";
+      st.books.unshift({id:"b"+Date.now(),title:t,price:bPrice.value.trim()||"متاح",desc:bDesc.value.trim(),image:img,fileUrl:bFileUrl.value.trim(),fileData:fd,fileName:fn});
+      [bTitle,bPrice,bImgUrl,bImgFile,bFileUrl,bFileUp,bDesc].forEach(x=>x.value=""); saveSt(); }
+    function delB(id){ st.books=st.books.filter(x=>x.id!==id); saveSt(); }
+    function saveCon(){ st.siteName=cName.value.trim()||"وحيد صالح"; st.whatsapp=cWa.value.trim(); st.siteBio=cBio.value.trim(); st.consultDesc=cCon.value.trim(); saveSt(); alert("تم الحفظ."); }
+    function addSoc(){ const n=sName.value.trim(), u=sUrl.value.trim(); if(!n||!u) return alert("أدخل المنصة والرابط."); st.socials.push({id:"s"+Date.now(),name:n,url:u}); sName.value=""; sUrl.value=""; saveSt(); }
+    function delS(id){ st.socials=st.socials.filter(x=>x.id!==id); saveSt(); }
+    function expJ(){ const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([JSON.stringify(st,null,2)],{type:"application/json"})); a.download="wahidsalh7-backup.json"; a.click(); }
+    function impJson(e){ const f=e.target.files[0]; if(!f) return; const r=new FileReader(); r.onload=()=>{ try{ st={...structuredClone(DEF),...JSON.parse(r.result)}; saveSt(); alert("تم الاستيراد."); }catch{ alert("ملف غير صالح."); } }; r.readAsText(f); }
+    function tglSec(id,btn){ const e=document.getElementById(id); const h=e.style.display==="none"; e.style.display=h?"":"none"; btn.textContent=h?"طي / فتح":"فتح"; }
+    function openTab(id,btn){ document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active")); document.querySelectorAll(".pane").forEach(x=>x.classList.remove("active")); btn.classList.add("active"); document.getElementById(id).classList.add("active"); }
+    function openPin(){ if(openAd){ admBox.classList.add("open"); rAdm(); admBox.scrollIntoView({behavior:"smooth"}); return; } pErr.textContent=""; pIn.value=""; pMod.classList.add("open"); setTimeout(()=>pIn.focus(),50); }
+    function closePin(){ pMod.classList.remove("open"); }
+    function chkPin(){ if(pIn.value.trim()===PIN){ openAd=true; closePin(); admBox.classList.add("open"); rAdm(); admBox.scrollIntoView({behavior:"smooth"}); }else pErr.textContent="رمز PIN غير صحيح."; }
+    function lockAdm(){ openAd=false; admBox.classList.remove("open"); }
+    render(); const init=getSb(); if(init.url&&init.key) pullSb();
   </script>
 </body>
 </html>
