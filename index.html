@@ -608,7 +608,7 @@
     function addSocial() { const name = socName.value.trim(), url = socUrl.value.trim(); if (!name || !url) return alert("أدخل اسم المنصة والرابط."); state.socials.push({ id: "so" + Date.now(), name, url }); socName.value = ""; socUrl.value = ""; saveState(); }
     function delSocial(id) { state.socials = state.socials.filter(x => x.id !== id); saveState(); }
 
-    function getSb() { try { return JSON.parse(localStorage.getItem(SB_KEY) || "{}"); } catch { return {}; } }
+    function getSb() { try { const d = JSON.parse(localStorage.getItem(SB_KEY) || "{}"); return { url: d.url || "https://nwbzfpcdheqjuubpndep.supabase.co", key: d.key || "sb_publishable_ZUWpZQob_gJoNsRWm-aOSQ_7kJqi1pn" }; } catch { return { url: "https://nwbzfpcdheqjuubpndep.supabase.co", key: "sb_publishable_ZUWpZQob_gJoNsRWm-aOSQ_7kJqi1pn" }; } }
     function saveSb() { localStorage.setItem(SB_KEY, JSON.stringify({ url: sbUrl.value.trim().replace(/\/+$/,""), key: sbKey.value.trim() })); sbStatus.textContent = "تم حفظ إعدادات Supabase."; }
     async function pushSb(silent = false) {
       const sb = getSb(); if (!sb.url || !sb.key) { if (!silent) sbStatus.textContent = "أدخل URL و Key أولاً."; return; }
