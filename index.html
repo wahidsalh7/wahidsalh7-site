@@ -3,367 +3,646 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>وحيد صالح | مدرب وعي ومؤلف كتب</title>
+  <title>خطاب الروح | وحيد صالح</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #f6f2ff;
-      --card: #ffffff;
-      --soft: #efe9ff;
-      --text: #1c1233;
-      --muted: #5f5578;
-      --purple: #5b34eb;
-      --purple-deep: #24114b;
-      --purple-light: #8a6bff;
-      --border: #dfd5fa;
-      --danger: #b91c1c;
-      --ok: #15803d;
+      --bg: #f8f6f1;
+      --surface: #ffffff;
+      --soft: #eff3ef;
+      --primary: #1f4d3e;
+      --primary-dark: #14352a;
+      --accent: #b88946;
+      --text: #1e2623;
+      --muted: #5c6964;
+      --border: #e2dfd7;
+      --shadow: 0 12px 32px rgba(20, 53, 42, 0.07);
+      --radius: 22px;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
     body {
-      font-family: system-ui, -apple-system, "Segoe UI", Tahoma, sans-serif;
-      background: radial-gradient(circle at top, #ede4ff 0%, var(--bg) 45%, #f9f7ff 100%);
+      font-family: 'Tajawal', sans-serif;
+      background: var(--bg);
       color: var(--text);
       line-height: 1.8;
-      min-height: 100vh;
+      overflow-x: hidden;
     }
-    a { color: var(--purple); text-decoration: none; }
+    a { text-decoration: none; color: inherit; }
     img { max-width: 100%; display: block; }
+    .container { width: 100%; max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+
+    /* Navigation */
+    .nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(248, 246, 241, 0.9);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 68px; gap: 12px;
+    }
+    .brand {
+      font-family: 'Amiri', serif; font-size: 1.65rem; font-weight: 700;
+      color: var(--primary); letter-spacing: 0.5px;
+    }
+    .nav-links { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
+    .nav-links a { font-size: 0.95rem; font-weight: 700; color: var(--muted); transition: .2s; }
+    .nav-links a:hover { color: var(--primary); }
+    .admin-trigger {
+      background: var(--soft); color: var(--primary); border: 1px solid var(--border);
+      padding: 7px 14px; border-radius: 999px; font-family: inherit;
+      font-size: 0.85rem; font-weight: 700; cursor: pointer;
+    }
 
     /* Hero */
     .hero {
-      background: linear-gradient(135deg, #1b0b3b 0%, #3e1fb5 52%, #6d4aff 100%);
+      position: relative;
+      background: radial-gradient(circle at top right, #2b6653, #14352a 75%);
       color: #fff;
-      padding: 28px 20px 64px;
-      border-bottom-left-radius: 32px;
-      border-bottom-right-radius: 32px;
-      box-shadow: 0 18px 40px rgba(36, 17, 75, 0.18);
-    }
-    .topbar {
-      max-width: 1080px;
-      margin: 0 auto 38px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-    .pill-status {
-      background: rgba(255, 255, 255, 0.14);
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      padding: 6px 14px;
-      border-radius: 999px;
-      font-size: 0.82rem;
-      backdrop-filter: blur(8px);
-    }
-    .admin-btn {
-      background: #fff;
-      color: var(--purple-deep);
-      border: none;
-      padding: 7px 16px;
-      border-radius: 999px;
-      font-size: 0.84rem;
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
-    }
-    .hero-inner {
-      max-width: 780px;
-      margin: 0 auto;
+      padding: 86px 0 96px;
       text-align: center;
+      background-size: cover;
+      background-position: center;
     }
+    .hero::before {
+      content: ""; position: absolute; inset: 0;
+      background: linear-gradient(180deg, rgba(16, 42, 34, 0.72), rgba(16, 42, 34, 0.84));
+    }
+    .hero-content { position: relative; z-index: 1; max-width: 720px; margin: 0 auto; }
     .hero-badge {
-      display: inline-block;
-      background: rgba(255, 255, 255, 0.16);
-      border: 1px solid rgba(255, 255, 255, 0.28);
-      padding: 5px 16px;
-      border-radius: 999px;
-      font-size: 0.85rem;
-      margin-bottom: 14px;
+      display: inline-block; padding: 6px 18px; border-radius: 999px;
+      background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.22);
+      color: #f3dfb9; font-size: 0.9rem; font-weight: 700; margin-bottom: 18px;
     }
-    .hero h1 {
-      font-size: clamp(2rem, 5vw, 3rem);
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      margin-bottom: 14px;
+    .hero-logo {
+      font-family: 'Amiri', serif;
+      font-size: clamp(2.8rem, 7vw, 4.4rem);
+      font-weight: 700; line-height: 1.2; color: #fff;
+      text-shadow: 0 4px 24px rgba(0,0,0,0.25);
     }
-    .hero p {
-      font-size: 1.05rem;
-      opacity: 0.94;
-      max-width: 640px;
-      margin: 0 auto 26px;
+    .hero-sub {
+      font-size: 1.15rem; color: #e6ece9; margin: 14px auto 30px; max-width: 600px;
     }
-    .hero-btns {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
+    .hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+    /* Buttons */
     .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 11px 22px;
-      border-radius: 999px;
-      font-weight: 700;
-      font-size: 0.92rem;
-      border: none;
-      cursor: pointer;
-      transition: 0.2s ease;
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 12px 24px; border-radius: 999px; font-family: inherit;
+      font-size: 0.96rem; font-weight: 700; cursor: pointer; border: none; transition: .2s;
     }
-    .btn-light { background: #fff; color: var(--purple-deep); }
-    .btn-ghost { background: rgba(255,255,255,0.14); color: #fff; border: 1px solid rgba(255,255,255,0.3); }
-    .btn-purple { background: var(--purple); color: #fff; }
-    .btn-purple:hover { background: #4824cf; }
-    .btn-soft { background: var(--soft); color: var(--purple-deep); }
-    .btn-line { background: #fff; color: var(--text); border: 1px solid var(--border); }
-    .btn-del { background: #fee2e2; color: var(--danger); }
-    .btn-sm { padding: 7px 14px; font-size: 0.82rem; }
+    .btn-gold { background: var(--accent); color: #fff; }
+    .btn-gold:hover { filter: brightness(1.06); }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-outline { background: rgba(255,255,255,0.12); color: #fff; border: 1px solid rgba(255,255,255,0.35); }
+    .btn-soft { background: var(--soft); color: var(--primary); border: 1px solid var(--border); }
+    .btn-danger { background: #b83b3b; color: #fff; }
+    .btn-sm { padding: 8px 16px; font-size: 0.85rem; }
 
-    /* Layout */
-    .wrap { max-width: 1080px; margin: 0 auto; padding: 42px 20px 64px; }
-    .sec { margin-bottom: 44px; }
-    .sec-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 20px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid var(--border);
+    /* Sections */
+    section.block { padding: 72px 0; }
+    .sec-head { text-align: center; max-width: 640px; margin: 0 auto 44px; }
+    .sec-kicker { color: var(--accent); font-weight: 800; font-size: 0.9rem; letter-spacing: 0.5px; }
+    .sec-title {
+      font-family: 'Amiri', serif; font-size: clamp(1.9rem, 4vw, 2.5rem);
+      color: var(--primary); margin-top: 4px;
     }
-    .sec-title { font-size: 1.5rem; font-weight: 800; color: var(--purple-deep); }
-    .toggle-sec {
-      background: var(--card);
-      border: 1px solid var(--border);
-      color: var(--purple);
-      padding: 6px 14px;
-      border-radius: 999px;
-      font-size: 0.82rem;
-      font-weight: 700;
-      cursor: pointer;
-    }
+    .sec-desc { color: var(--muted); font-size: 1rem; margin-top: 8px; }
 
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
-      gap: 22px;
+    /* About */
+    .about-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+      box-shadow: var(--shadow); padding: 34px;
+      display: grid; grid-template-columns: 240px 1fr; gap: 32px; align-items: center;
     }
+    .avatar-box {
+      width: 220px; height: 260px; margin: 0 auto; border-radius: 20px;
+      overflow: hidden; background: var(--soft); border: 2px solid var(--border);
+      display: flex; align-items: center; justify-content: center; color: var(--muted);
+      font-weight: 700; text-align: center; padding: 14px;
+    }
+    .avatar-box img { width: 100%; height: 100%; object-fit: cover; }
+    .about-name { font-family: 'Amiri', serif; font-size: 2rem; color: var(--primary); }
+    .about-role { color: var(--accent); font-weight: 700; margin-bottom: 14px; }
+    .about-text { color: var(--text); font-size: 1.03rem; white-space: pre-line; }
+    .highlights { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+    .chip {
+      background: var(--soft); color: var(--primary); padding: 6px 14px;
+      border-radius: 999px; font-size: 0.86rem; font-weight: 700;
+    }
+    /* Grids & Cards */
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 22px; }
     .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 22px;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 0 10px 28px rgba(42, 19, 97, 0.05);
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 26px; box-shadow: var(--shadow); display: flex; flex-direction: column; justify-content: space-between;
     }
-    .card-img {
-      width: 100%;
-      height: 195px;
-      object-fit: cover;
-      background: linear-gradient(135deg, #ece3ff, #f7f3ff);
+    .card-tag {
+      display: inline-block; align-self: flex-start; background: var(--soft);
+      color: var(--primary); padding: 4px 12px; border-radius: 999px;
+      font-size: 0.82rem; font-weight: 700; margin-bottom: 12px;
     }
-    .card-placeholder {
-      height: 110px;
-      background: linear-gradient(135deg, #efe8ff, #faf7ff);
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      padding: 0 22px;
-      color: var(--purple);
-      font-weight: 700;
-      font-size: 0.9rem;
-    }
-    .card-body { padding: 22px; flex: 1; display: flex; flex-direction: column; }
-    .tag {
-      display: inline-block;
-      background: var(--soft);
-      color: var(--purple);
-      padding: 4px 12px;
-      border-radius: 999px;
-      font-size: 0.78rem;
-      font-weight: 700;
-      margin-bottom: 10px;
-      align-self: flex-start;
-    }
-    .card h3 { font-size: 1.2rem; color: var(--purple-deep); margin-bottom: 10px; }
-    .card p { color: var(--muted); font-size: 0.95rem; flex: 1; white-space: pre-line; }
+    .card h3 { font-size: 1.25rem; color: var(--primary-dark); margin-bottom: 10px; }
+    .card p { color: var(--muted); font-size: 0.96rem; margin-bottom: 18px; }
     .card-foot {
-      margin-top: 18px;
-      padding-top: 14px;
-      border-top: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
+      display: flex; align-items: center; justify-content: space-between; gap: 10px;
+      padding-top: 14px; border-top: 1px solid var(--border); flex-wrap: wrap;
     }
-    .price { font-weight: 800; color: var(--purple-deep); font-size: 0.95rem; }
+    .price { font-weight: 800; color: var(--accent); font-size: 1rem; }
 
-    /* Contact & Social */
+    /* Book Showcase */
+    .book-wrap {
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+      box-shadow: var(--shadow); padding: 36px;
+      display: grid; grid-template-columns: 280px 1fr; gap: 36px; align-items: center;
+    }
+    .book-cover {
+      width: 100%; max-width: 260px; aspect-ratio: 3/4; margin: 0 auto;
+      border-radius: 16px; overflow: hidden; background: linear-gradient(145deg, #2d6a54, #183d30);
+      border: 1px solid var(--border); display: flex; align-items: center; justify-content: center;
+      color: #fff; text-align: center; padding: 20px; font-family: 'Amiri', serif; font-size: 1.5rem;
+    }
+    .book-cover img { width: 100%; height: 100%; object-fit: cover; }
+    .quote-box {
+      background: var(--soft); border-right: 4px solid var(--accent);
+      padding: 14px 18px; border-radius: 12px; margin: 18px 0;
+      font-family: 'Amiri', serif; font-size: 1.2rem; color: var(--primary-dark);
+    }
+    .book-actions { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-top: 20px; }
+
+    /* Articles */
+    .art-img { width: 100%; height: 185px; object-fit: cover; border-radius: 14px; margin-bottom: 14px; }
+
+    /* Contact & Footer */
     .contact-box {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 28px;
-      box-shadow: 0 10px 28px rgba(42, 19, 97, 0.05);
+      background: var(--primary); color: #fff; border-radius: var(--radius);
+      padding: 44px 28px; text-align: center;
     }
-    .socials { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+    .contact-box h2 { font-family: 'Amiri', serif; font-size: 2.2rem; margin-bottom: 10px; }
+    .contact-box p { color: #dce6e2; max-width: 560px; margin: 0 auto 24px; }
+    .socials { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 22px; }
     .soc-link {
-      background: var(--soft);
-      color: var(--purple-deep);
-      border: 1px solid var(--border);
-      padding: 8px 16px;
-      border-radius: 999px;
-      font-weight: 700;
-      font-size: 0.88rem;
+      padding: 10px 18px; border-radius: 999px; background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.22); font-weight: 700; font-size: 0.92rem;
     }
-    .soc-link:hover { background: var(--purple); color: #fff; }
-    .adm { display:none; background:var(--card); border:2px solid var(--p); border-radius:22px; padding:24px; margin-top:28px; }
-    .adm.open { display:block; }
-    .tabs { display:flex; gap:8px; flex-wrap:wrap; margin:16px 0 20px; border-bottom:1px solid var(--b); padding-bottom:12px; }
-    .tab { padding:7px 15px; border-radius:999px; border:1px solid var(--b); background:var(--soft); color:var(--text); font-weight:700; cursor:pointer; font-size:.85rem; }
-    .tab.active { background:var(--p); color:#fff; border-color:var(--p); }
-    .pane { display:none; } .pane.active { display:block; }
-    .fg { display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:12px; }
-    .fld { display:flex; flex-direction:column; gap:6px; margin-bottom:12px; }
-    .fld label { font-weight:700; font-size:.85rem; color:var(--pd); }
-    .fld input,.fld textarea { width:100%; padding:10px 12px; border:1px solid var(--b); border-radius:12px; font-family:inherit; font-size:.92rem; background:#fbf9ff; color:var(--text); }
-    .fld textarea { min-height:88px; resize:vertical; }
-    .list { margin-top:14px; display:flex; flex-direction:column; gap:10px; }
-    .row { display:flex; justify-content:space-between; align-items:center; gap:10px; padding:11px 14px; border-radius:14px; background:var(--soft); flex-wrap:wrap; }
-    .msg { margin-top:10px; font-size:.88rem; font-weight:700; }
-    .ok { color:var(--ok); } .err { color:var(--del); }
-    .modal { position:fixed; inset:0; background:rgba(20,10,42,.55); display:none; align-items:center; justify-content:center; padding:16px; z-index:999; }
-    .modal.open { display:flex; }
-    .mcard { background:var(--card); border-radius:20px; padding:22px; width:100%; max-width:350px; border:1px solid var(--b); }
-    footer { text-align:center; padding:26px 16px; color:var(--muted); font-size:.9rem; }
+    footer { text-align: center; padding: 28px 16px; color: var(--muted); font-size: 0.9rem; }
+
+    /* Admin Dashboard */
+    .admin-panel {
+      display: none; background: var(--surface); border: 2px solid var(--primary);
+      border-radius: var(--radius); padding: 28px; margin: 36px auto; box-shadow: var(--shadow);
+    }
+    .admin-panel.open { display: block; }
+    .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin: 18px 0 22px; border-bottom: 1px solid var(--border); padding-bottom: 14px; }
+    .tab {
+      padding: 8px 16px; border-radius: 999px; border: 1px solid var(--border);
+      background: var(--soft); color: var(--text); font-family: inherit; font-weight: 700; cursor: pointer;
+    }
+    .tab.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .pane { display: none; } .pane.active { display: block; }
+    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+    .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+    .field label { font-size: 0.88rem; font-weight: 700; color: var(--primary-dark); }
+    .field input, .field textarea {
+      width: 100%; padding: 11px 14px; border: 1px solid var(--border); border-radius: 12px;
+      font-family: inherit; font-size: 0.95rem; background: #fcfbf8;
+    }
+    .field textarea { min-height: 92px; resize: vertical; }
+    .item-list { margin-top: 16px; display: flex; flex-direction: column; gap: 10px; }
+    .item-row {
+      display: flex; justify-content: space-between; align-items: center; gap: 10px;
+      padding: 12px 16px; background: var(--soft); border-radius: 14px; flex-wrap: wrap;
+    }
+    .modal {
+      position: fixed; inset: 0; background: rgba(15, 25, 22, 0.6);
+      display: none; align-items: center; justify-content: center; padding: 16px; z-index: 999;
+    }
+    .modal.open { display: flex; }
+    .modal-card { background: var(--surface); border-radius: 20px; padding: 24px; width: 100%; max-width: 360px; }
+    @media (max-width: 768px) {
+      .about-card, .book-wrap { grid-template-columns: 1fr; text-align: center; }
+      .nav-links a { display: none; }
+    }
   </style>
 </head>
 <body>
-  <header class="hero">
-    <div class="top"><span class="pill" id="syncPill">حفظ محلي نشط</span><button class="adm-btn" onclick="openPin()">لوحة التحكم</button></div>
-    <div class="hero-c">
-      <div class="pill" style="margin-bottom:12px;">وعي ذاتي • كتابة • استشارات</div>
-      <h1 id="heroName">وحيد صالح</h1>
-      <p id="heroBio">مدرب وعي ومؤلف كتب — مساحة هادئة للوعي الذاتي، المقالات اليومية، الكتب والملفات، وجلسات الاستشارة.</p>
-      <div class="btns">
-        <a class="btn btn-w" href="#consultations">حجز استشارة</a>
-        <a class="btn btn-g" id="heroWa" href="https://wa.me/" target="_blank" rel="noopener">واتساب مباشر</a>
-        <a class="btn btn-g" href="#books">الكتب والملفات</a>
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="#" class="brand" id="navBrand">خطاب الروح</a>
+      <div class="nav-links">
+        <a href="#about">السيرة الذاتية</a>
+        <a href="#services">الخدمات</a>
+        <a href="#book">الكتاب</a>
+        <a href="#articles">المقالات</a>
+        <a href="#contact">التواصل</a>
+        <button class="admin-trigger" onclick="openPin()">لوحة التحكم</button>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero" id="heroSec">
+    <div class="container hero-content">
+      <span class="hero-badge" id="heroBadge">وعي ذاتي • تحرير مشاعر • إرشاد فردي</span>
+      <h1 class="hero-logo" id="heroLogo">خطاب الروح</h1>
+      <p class="hero-sub" id="heroSub">مساحة هادئة للعودة إلى الذات، وفهم أصداء النفس، والانتقال من الضجيج الداخلي إلى السكينة والوضوح مع وحيد صالح.</p>
+      <div class="hero-actions">
+        <a href="#services" class="btn btn-gold">استكشف الخدمات والجلسات</a>
+        <a href="#book" class="btn btn-outline">كتاب أصداء بالداخل</a>
       </div>
     </div>
   </header>
-  <main class="wrap">
-    <section class="sec" id="articles"><div class="sec-h"><h2 class="sec-t">المقالات اليومية</h2><button class="tgl" onclick="tglSec('artGrid',this)">طي / فتح</button></div><div class="grid" id="artGrid"></div></section>
-    <section class="sec" id="books"><div class="sec-h"><h2 class="sec-t">الكتب والملفات</h2><button class="tgl" onclick="tglSec('bookGrid',this)">طي / فتح</button></div><div class="grid" id="bookGrid"></div></section>
-    <section class="sec box" id="consultations">
-      <h2 class="sec-t">الاستشارات والتواصل المباشر</h2>
-      <p id="consultDesc" style="color:var(--muted);margin-top:8px;"></p>
-      <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;"><a class="btn btn-p" id="waBtn" href="https://wa.me/" target="_blank" rel="noopener">تواصل عبر واتساب</a><span id="waTxt" style="font-weight:700;color:var(--muted);"></span></div>
-      <div class="socs" id="socPub"></div>
+
+  <main>
+    <section class="block" id="about">
+      <div class="container">
+        <div class="about-card">
+          <div class="avatar-box" id="avatarBox">أضف صورتك الشخصية من لوحة التحكم</div>
+          <div>
+            <span class="sec-kicker">السيرة الذاتية</span>
+            <h2 class="about-name" id="aboutName">وحيد صالح</h2>
+            <div class="about-role" id="aboutRole">مؤلف كتاب «أصداء بالداخل» ومرشد في الوعي الذاتي وتحرير المشاعر</div>
+            <p class="about-text" id="aboutBio"></p>
+            <div class="highlights">
+              <span class="chip">مؤلف «أصداء بالداخل» — دار أم الدنيا</span>
+              <span class="chip">متابعة فردية 40 يوماً</span>
+              <span class="chip">تحرير المشاعر</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
-    <section class="adm" id="admBox">
-      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;"><h2 class="sec-t">لوحة التحكم الكاملة</h2><button class="btn btn-l btn-sm" onclick="lockAdm()">إغلاق</button></div>
-      <div class="tabs">
-        <button class="tab active" onclick="openTab('t1',this)">المقالات</button><button class="tab" onclick="openTab('t2',this)">الكتب والملفات</button>
-        <button class="tab" onclick="openTab('t3',this)">الواتساب والسوشيل</button><button class="tab" onclick="openTab('t4',this)">Supabase ونسخ احتياطي</button>
+
+    <section class="block" id="services" style="background: var(--soft);">
+      <div class="container">
+        <div class="sec-head">
+          <span class="sec-kicker">المرافقة والبرامج</span>
+          <h2 class="sec-title">الخدمات والجلسات الفردية</h2>
+          <p class="sec-desc">مساحات عمل فردية مصممة بخصوصية تامة بعيداً عن المجموعات لمرافقتك في رحلة وعيك.</p>
+        </div>
+        <div class="grid" id="servicesGrid"></div>
       </div>
-      <div class="pane active" id="t1">
-        <div class="fg"><div class="fld"><label>عنوان المقال</label><input id="aTitle" /></div><div class="fld"><label>التصنيف</label><input id="aTag" placeholder="تأمل يومي" /></div><div class="fld"><label>رابط صورة</label><input id="aUrl" placeholder="https://..." /></div><div class="fld"><label>أو صورة من الجهاز</label><input type="file" id="aFile" accept="image/*" /></div></div>
-        <div class="fld"><label>نص المقال</label><textarea id="aBody"></textarea></div>
-        <button class="btn btn-p" onclick="addArt()">نشر المقال</button><div class="list" id="lArt"></div>
+    </section>
+
+    <section class="block" id="book">
+      <div class="container">
+        <div class="book-wrap">
+          <div class="book-cover" id="bookCover">أصداء بالداخل<br>وحيد صالح</div>
+          <div>
+            <span class="sec-kicker">الإصدار الأدبي والتأملي</span>
+            <h2 class="sec-title" id="bookTitle">أصداء بالداخل — سيرة النفس في رحلة الاستشفاء الذاتي</h2>
+            <p style="color:var(--muted);font-weight:700;margin-top:4px;" id="bookPub">صادر عن دار أم الدنيا للدراسات والنشر والتوزيع</p>
+            <p style="margin-top:14px;" id="bookDesc"></p>
+            <div class="quote-box" id="bookQuote">«الألم غير موجود، الوهم يخلق الألم والحقيقة لا تؤلم.»</div>
+            <div class="book-actions">
+              <span class="price" id="bookPrice">السعر: 15$</span>
+              <a href="#" target="_blank" rel="noopener" class="btn btn-gold" id="paypalBtn">الشراء عبر PayPal</a>
+              <a href="#" target="_blank" rel="noopener" class="btn btn-primary" id="bookWaBtn">تأكيد الطلب واستلام النسخة عبر واتساب</a>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="pane" id="t2">
-        <div class="fg"><div class="fld"><label>اسم الكتاب أو الملف</label><input id="bTitle" /></div><div class="fld"><label>السعر / الحالة</label><input id="bPrice" placeholder="متاح للطلب" /></div><div class="fld"><label>رابط غلاف</label><input id="bImgUrl" placeholder="https://..." /></div><div class="fld"><label>أو صورة غلاف</label><input type="file" id="bImgFile" accept="image/*" /></div><div class="fld"><label>رابط ملف</label><input id="bFileUrl" placeholder="https://..." /></div><div class="fld"><label>أو ملف من الجهاز</label><input type="file" id="bFileUp" /></div></div>
-        <div class="fld"><label>الوصف</label><textarea id="bDesc"></textarea></div>
-        <button class="btn btn-p" onclick="addBook()">إضافة الكتاب / الملف</button><div class="list" id="lBook"></div>
+    </section>
+
+    <section class="block" id="articles" style="background: var(--soft);">
+      <div class="container">
+        <div class="sec-head">
+          <span class="sec-kicker">تأملات وكتابات</span>
+          <h2 class="sec-title">أعمالي ومقالاتي في الوعي الذاتي</h2>
+        </div>
+        <div class="grid" id="articlesGrid"></div>
       </div>
-      <div class="pane" id="t3">
-        <div class="fg"><div class="fld"><label>الاسم الظاهر</label><input id="cName" /></div><div class="fld"><label>رقم الواتساب (دولي بدون +)</label><input id="cWa" placeholder="628123456789" /></div></div>
-        <div class="fld"><label>النبذة</label><textarea id="cBio"></textarea></div><div class="fld"><label>نص الاستشارات</label><textarea id="cCon"></textarea></div>
-        <button class="btn btn-p" onclick="saveCon()">حفظ التواصل</button>
-        <hr style="margin:18px 0;border:none;border-top:1px solid var(--b);" />
-        <div class="fg"><div class="fld"><label>اسم المنصة</label><input id="sName" placeholder="إنستغرام، تيك توك..." /></div><div class="fld"><label>الرابط</label><input id="sUrl" placeholder="https://..." /></div></div>
-        <button class="btn btn-s" onclick="addSoc()">إضافة رابط منصة</button><div class="list" id="lSoc"></div>
-      </div>
-      <div class="pane" id="t4">
-        <div class="fg"><div class="fld"><label>Supabase URL</label><input id="sbUrl" placeholder="https://xxxx.supabase.co" /></div><div class="fld"><label>Supabase Anon Key</label><input id="sbKey" placeholder="eyJ..." /></div></div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;"><button class="btn btn-p" onclick="saveSb()">حفظ Supabase</button><button class="btn btn-s" onclick="pushSb()">رفع للسحابة</button><button class="btn btn-l" onclick="pullSb()">جلب من السحابة</button></div>
-        <div id="sbMsg" class="msg"></div>
-        <hr style="margin:18px 0;border:none;border-top:1px solid var(--b);" />
-        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;"><button class="btn btn-s btn-sm" onclick="expJ()">تصدير JSON</button><input type="file" id="impJ" accept="application/json" onchange="impJson(event)" style="max-width:230px;" /></div>
+    </section>
+
+    <section class="block" id="contact">
+      <div class="container">
+        <div class="contact-box">
+          <h2>تواصل مباشر</h2>
+          <p id="contactDesc">لحجز جلسة استشارة فردية، الاستفسار عن برنامج الـ 40 يوماً، أو طلب نسخة من الكتاب.</p>
+          <a href="#" target="_blank" rel="noopener" class="btn btn-gold" id="mainWaBtn">تواصل الآن عبر واتساب</a>
+          <div class="socials" id="socialsList"></div>
+        </div>
+
+        <div class="admin-panel" id="adminPanel">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;">
+            <h2 class="sec-title" style="margin:0;">لوحة التحكم الكاملة</h2>
+            <button class="btn btn-soft btn-sm" onclick="closeAdmin()">إغلاق اللوحة</button>
+          </div>
+          <div class="tabs">
+            <button class="tab active" onclick="switchTab('p1', this)">الهوية والصور والسيرة</button>
+            <button class="tab" onclick="switchTab('p2', this)">الخدمات والروابط</button>
+            <button class="tab" onclick="switchTab('p3', this)">الكتاب والدفع</button>
+            <button class="tab" onclick="switchTab('p4', this)">المقالات</button>
+            <button class="tab" onclick="switchTab('p5', this)">التواصل والسوشيل</button>
+            <button class="tab" onclick="switchTab('p6', this)">Supabase ونسخ احتياطي</button>
+          </div>
+
+          <div class="pane active" id="p1">
+            <div class="form-grid">
+              <div class="field"><label>اسم الشعار الرئيسي</label><input id="inLogo" /></div>
+              <div class="field"><label>العبارة الترحيبية الصغيرة</label><input id="inBadge" /></div>
+              <div class="field"><label>صورة خلفية الهيرو (من الجهاز)</label><input type="file" id="inHeroFile" accept="image/*" /></div>
+              <div class="field"><label>أو رابط صورة الهيرو</label><input id="inHeroUrl" placeholder="https://..." /></div>
+              <div class="field"><label>صورتك الشخصية (من الجهاز)</label><input type="file" id="inAvatarFile" accept="image/*" /></div>
+              <div class="field"><label>أو رابط صورتك الشخصية</label><input id="inAvatarUrl" placeholder="https://..." /></div>
+              <div class="field"><label>الاسم</label><input id="inName" /></div>
+              <div class="field"><label>الصفة المهنية</label><input id="inRole" /></div>
+            </div>
+            <div class="field"><label>النص التعريفي في الهيرو</label><textarea id="inHeroSub"></textarea></div>
+            <div class="field"><label>السيرة الذاتية</label><textarea id="inBio"></textarea></div>
+            <button class="btn btn-primary" onclick="saveIdentity()">حفظ الهوية والصور</button>
+          </div>
+
+          <div class="pane" id="p2">
+            <div class="form-grid">
+              <div class="field"><label>عنوان الخدمة أو الرابط</label><input id="sTitle" placeholder="برنامج المتابعة الشخصية 40 يوماً" /></div>
+              <div class="field"><label>التصنيف</label><input id="sTag" placeholder="متابعة فردية 1 على 1" /></div>
+              <div class="field"><label>السعر أو المدة</label><input id="sPrice" placeholder="40 يوماً — فردي" /></div>
+              <div class="field"><label>رابط مخصص (اختياري — يفتح واتساب إذا تُرك فارغاً)</label><input id="sLink" placeholder="https://..." /></div>
+            </div>
+            <div class="field"><label>وصف الخدمة</label><textarea id="sDesc"></textarea></div>
+            <button class="btn btn-primary" onclick="addService()">إضافة خدمة / رابط</button>
+            <div class="item-list" id="adminServices"></div>
+          </div>
+
+          <div class="pane" id="p3">
+            <div class="form-grid">
+              <div class="field"><label>عنوان الكتاب</label><input id="bTitle" /></div>
+              <div class="field"><label>دار النشر</label><input id="bPub" /></div>
+              <div class="field"><label>السعر</label><input id="bPrice" /></div>
+              <div class="field"><label>رابط الدفع PayPal</label><input id="bPaypal" placeholder="https://paypal.me/..." /></div>
+              <div class="field"><label>صورة غلاف الكتاب (من الجهاز)</label><input type="file" id="bCoverFile" accept="image/*" /></div>
+              <div class="field"><label>أو رابط صورة الغلاف</label><input id="bCoverUrl" placeholder="https://..." /></div>
+            </div>
+            <div class="field"><label>نبذة الكتاب</label><textarea id="bDesc"></textarea></div>
+            <div class="field"><label>اقتباس مميز من الكتاب</label><textarea id="bQuote"></textarea></div>
+            <button class="btn btn-primary" onclick="saveBook()">حفظ بيانات الكتاب</button>
+          </div>
+
+          <div class="pane" id="p4">
+            <div class="form-grid">
+              <div class="field"><label>عنوان المقال</label><input id="aTitle" /></div>
+              <div class="field"><label>التصنيف</label><input id="aTag" placeholder="تأملات في الوعي" /></div>
+              <div class="field"><label>صورة المقال (من الجهاز)</label><input type="file" id="aFile" accept="image/*" /></div>
+              <div class="field"><label>أو رابط صورة / مقال خارجي</label><input id="aLink" placeholder="https://..." /></div>
+            </div>
+            <div class="field"><label>نص المقال</label><textarea id="aBody"></textarea></div>
+            <button class="btn btn-primary" onclick="addArticle()">نشر المقال</button>
+            <div class="item-list" id="adminArticles"></div>
+          </div>
+
+          <div class="pane" id="p5">
+            <div class="form-grid">
+              <div class="field"><label>رقم الواتساب الدولي (بدون +)</label><input id="cWa" placeholder="628123456789" /></div>
+              <div class="field"><label>نص قسم التواصل</label><input id="cDesc" /></div>
+            </div>
+            <button class="btn btn-primary" onclick="saveContact()">حفظ الواتساب</button>
+            <hr style="margin:20px 0;border:none;border-top:1px solid var(--border);" />
+            <div class="form-grid">
+              <div class="field"><label>اسم المنصة</label><input id="socName" placeholder="فيسبوك - Wahid salh" /></div>
+              <div class="field"><label>الرابط</label><input id="socUrl" placeholder="https://..." /></div>
+            </div>
+            <button class="btn btn-soft" onclick="addSocial()">إضافة حساب سوشيل ميديا</button>
+            <div class="item-list" id="adminSocials"></div>
+          </div>
+
+          <div class="pane" id="p6">
+            <div class="form-grid">
+              <div class="field"><label>Supabase URL</label><input id="sbUrl" placeholder="https://xxxx.supabase.co" /></div>
+              <div class="field"><label>Supabase Anon Key</label><input id="sbKey" placeholder="eyJ..." /></div>
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+              <button class="btn btn-primary" onclick="saveSb()">حفظ الإعدادات</button>
+              <button class="btn btn-soft" onclick="pushSb()">رفع للسحابة</button>
+              <button class="btn btn-soft" onclick="pullSb()">جلب من السحابة</button>
+            </div>
+            <p id="sbStatus" style="margin-top:10px;font-weight:700;color:var(--primary);"></p>
+            <hr style="margin:20px 0;border:none;border-top:1px solid var(--border);" />
+            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+              <button class="btn btn-gold btn-sm" onclick="exportBackup()">تصدير نسخة احتياطية JSON</button>
+              <input type="file" accept="application/json" onchange="importBackup(event)" />
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   </main>
-  <div class="modal" id="pMod"><div class="mcard"><h3 style="margin-bottom:8px;">رمز الدخول</h3><div class="fld"><label>PIN</label><input type="password" id="pIn" inputmode="numeric" /></div><div style="display:flex;gap:8px;justify-content:flex-end;"><button class="btn btn-l btn-sm" onclick="closePin()">إلغاء</button><button class="btn btn-p btn-sm" onclick="chkPin()">دخول</button></div><div id="pErr" class="msg err"></div></div></div>
-  <footer>wahidsalh7 — جميع الحقوق محفوظة</footer>
+
+  <div class="modal" id="pinModal">
+    <div class="modal-card">
+      <h3 style="margin-bottom:10px;color:var(--primary);">الدخول إلى لوحة التحكم</h3>
+      <div class="field"><label>رمز PIN</label><input type="password" id="pinInput" inputmode="numeric" /></div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;">
+        <button class="btn btn-soft btn-sm" onclick="closePin()">إلغاء</button>
+        <button class="btn btn-primary btn-sm" onclick="checkPin()">دخول</button>
+      </div>
+      <p id="pinErr" style="color:#b83b3b;font-weight:700;margin-top:8px;"></p>
+    </div>
+  </div>
+
+  <footer>خطاب الروح — وحيد صالح © جميع الحقوق محفوظة</footer>
   <script>
-    const PIN="1993", SK="ws7_st", CK="ws7_sb";
-    const DEF={ siteName:"وحيد صالح", siteBio:"مدرب وعي ومؤلف كتب — مساحة هادئة للوعي الذاتي، المقالات اليومية، الكتب والملفات، وجلسات الاستشارة.", consultDesc:"جلسات فردية للوعي الذاتي ومرافقة المسار الداخلي عبر الواتساب.", whatsapp:"",
-      socials:[{id:"1",name:"إنستغرام",url:"https://instagram.com"},{id:"2",name:"تيك توك",url:"https://tiktok.com"},{id:"3",name:"فيسبوك",url:"https://facebook.com"}],
-      articles:[{id:"a1",title:"الإنصات للهدوء الداخلي",tag:"تأمل يومي",image:"",body:"نلاحظ الضجيج الذهني بهدوء ونعود إلى الحضور الواعي والاتزان الداخلي."},{id:"a2",title:"مرآة العلاقات والحدود",tag:"وعي ذاتي",image:"",body:"قراءة واعية لما تكشفه مواقف الحياة اليومية عن صفائنا الداخلي."}],
-      books:[{id:"b1",title:"مفاتيح الوعي والسكينة",price:"متاح للطلب المباشر",image:"",fileData:"",fileName:"",fileUrl:"",desc:"كتاب تأملي في الوعي الذاتي والسكينة الداخلية."}]
+    const PIN = "1993", STORE_KEY = "khetab_alrouh_v1", SB_KEY = "khetab_sb_v1";
+    const DEFAULT_STATE = {
+      logo: "خطاب الروح",
+      badge: "وعي ذاتي • تحرير مشاعر • إرشاد فردي",
+      heroSub: "مساحة هادئة للعودة إلى الذات، وفهم أصداء النفس، والانتقال من الضجيج الداخلي إلى السكينة والوضوح مع وحيد صالح.",
+      heroImg: "",
+      avatarImg: "",
+      name: "وحيد صالح",
+      role: "مؤلف كتاب «أصداء بالداخل» ومرشد في الوعي الذاتي وتحرير المشاعر",
+      bio: "بدأت مسيرتي في عالم التجارة، ثم قادتني رحلة البحث الداخلي وتجارب الحياة — بدءاً من دراسة اللغة في ماليزيا وصولاً إلى إقامتي لمدة سنتين في بالي — إلى التعمق في فهم النفس الإنسانية ومشاعرها.\n\nأقدّم جلسات تحرير المشاعر، والإرشاد الفردي، وبرنامج المتابعة الشخصية لمدة 40 يوماً بشكل فردي ومباشر مع كل شخص بعيداً عن المجموعات، لمساعدته على التحرر من الثقل الداخلي واستعادة وضوحه واتزانه.",
+      whatsapp: "",
+      contactDesc: "لحجز جلسة استشارة فردية، الاستفسار عن برنامج الـ 40 يوماً، أو طلب نسخة من الكتاب.",
+      book: {
+        title: "أصداء بالداخل — سيرة النفس في رحلة الاستشفاء الذاتي",
+        pub: "صادر عن دار أم الدنيا للدراسات والنشر والتوزيع",
+        desc: "إبحار تأملي وروائي في سيرة النفس ورحلتها نحو الاستشفاء الذاتي، واستكشاف الأصوات الداخلية والمشاعر التي تشكّل وعينا وتجاربنا، للانتقال من الهروب والارتباك إلى الحضور والسكينة الداخلية.",
+        quote: "«الألم غير موجود، الوهم يخلق الألم والحقيقة لا تؤلم.»",
+        price: "السعر: 15$",
+        paypal: "https://paypal.me/",
+        cover: ""
+      },
+      services: [
+        { id: "s1", tag: "البرنامج الأساسي • فردي 1 على 1", title: "برنامج المتابعة الشخصية (40 يوماً)", desc: "مرافقة شخصية فردية مكثفة لمدة 40 يوماً بدون مجموعات، للعمل بعمق وخصوصية على جذور المشاعر وأنماط التفكير وبناء التوازن الداخلي.", price: "40 يوماً — متابعة فردية", link: "" },
+        { id: "s2", tag: "جلسة متخصصة", title: "جلسات تحرير المشاعر", desc: "جلسات فردية مخصصة للتعرف على المشاعر المكبوتة والعوالق الداخلية وتحريرها بهدوء ووعي.", price: "جلسة فردية", link: "" },
+        { id: "s3", tag: "استشارة خاصة", title: "جلسات الإرشاد والوعي الذاتي", desc: "جلسة استشارية لقراءة التحديات الحالية في الحياة والعلاقات من زاوية الوعي الذاتي وخطاب الروح.", price: "استشارة فردية", link: "" }
+      ],
+      articles: [
+        { id: "a1", tag: "من أصداء بالداخل", title: "الإنصات لصوت الروح وسط الضجيج", body: "كثرة الأصوات المكتسبة في الداخل تفقدنا وضوح البوصلة؛ وحين نصمت ونراقب مشاعرنا دون هروب، يبدأ صوت الحقيقة بالظهور.", image: "", link: "" },
+        { id: "a2", tag: "وعي ذاتي", title: "النية هي النواة الأولى لكل فعل", body: "لا تقس أفعالك بمظهرها الخارجي فقط، بل انظر إلى النية التي دفعتك إليها: هل هي هروب من الألم أم حضور وحب للذات؟", image: "", link: "" }
+      ],
+      socials: [
+        { id: "so1", name: "فيسبوك — Wahid salh", url: "https://facebook.com" },
+        { id: "so2", name: "إنستغرام — wahid salh7", url: "https://instagram.com" }
+      ]
     };
-    let st=loadSt(), openAd=false;
-    function loadSt(){ try{ const r=localStorage.getItem(SK); return r?{...structuredClone(DEF),...JSON.parse(r)}:structuredClone(DEF); }catch{ return structuredClone(DEF); } }
-    function saveSt(){ localStorage.setItem(SK,JSON.stringify(st)); render(); const sb=getSb(); if(sb.url&&sb.key) pushSb(true); }
-    function getSb(){ try{ return JSON.parse(localStorage.getItem(CK)||"{}"); }catch{ return {}; } }
-    function saveSb(){ const url=sbUrl.value.trim().replace(/\/+$/,""), key=sbKey.value.trim(); localStorage.setItem(CK,JSON.stringify({url,key})); setMsg(url&&key?"تم الحفظ.":"تم المسح.",true); pill(); }
-    function setMsg(t,ok){ sbMsg.textContent=t; sbMsg.className="msg "+(ok?"ok":"err"); }
-    function pill(){ const sb=getSb(); syncPill.textContent=(sb.url&&sb.key)?"مزامنة Supabase نشطة":"حفظ محلي نشط"; }
-    async function pushSb(sil=false){ const sb=getSb(); if(!sb.url||!sb.key){ if(!sil) setMsg("أدخل URL و Key.",false); return; }
-      try{ const b=JSON.stringify({id:"main",data:st,updated_at:new Date().toISOString()}), h={"Content-Type":"application/json","apikey":sb.key,"Authorization":"Bearer "+sb.key,"Prefer":"return=representation"};
-        let r=await fetch(`${sb.url}/rest/v1/site_state?id=eq.main`,{method:"PATCH",headers:h,body:b}); const rows=await r.json();
-        if(!Array.isArray(rows)||!rows.length) r=await fetch(`${sb.url}/rest/v1/site_state`,{method:"POST",headers:h,body:b});
-        if(!r.ok) throw 0; if(!sil) setMsg("تم الرفع للسحابة.",true); }catch{ if(!sil) setMsg("تعذر الرفع للسحابة.",false); } }
-    async function pullSb(){ const sb=getSb(); if(!sb.url||!sb.key){ setMsg("أدخل URL و Key.",false); return; }
-      try{ const r=await fetch(`${sb.url}/rest/v1/site_state?id=eq.main&select=data`,{headers:{"apikey":sb.key,"Authorization":"Bearer "+sb.key}}); const rows=await r.json();
-        if(Array.isArray(rows)&&rows[0]?.data){ st={...structuredClone(DEF),...rows[0].data}; localStorage.setItem(SK,JSON.stringify(st)); render(); setMsg("تم الجلب.",true); } else setMsg("لا يوجد سجل main.",false); }catch{ setMsg("تعذر الجلب.",false); } }
-    const toUrl=f=>new Promise((res,rej)=>{ if(!f) return res(""); const r=new FileReader(); r.onload=()=>res(r.result); r.onerror=rej; r.readAsDataURL(f); });
-    const esc=s=>String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
-    const wa=()=> (st.whatsapp||"").replace(/[^\d]/g,"") ? "https://wa.me/"+(st.whatsapp||"").replace(/[^\d]/g,"") : "https://wa.me/";
-    function render(){
-      pill(); document.title=st.siteName+" | مدرب وعي ومؤلف كتب"; heroName.textContent=st.siteName; heroBio.textContent=st.siteBio; consultDesc.textContent=st.consultDesc;
-      const u=wa(); heroWa.href=u; waBtn.href=u; waTxt.textContent=st.whatsapp?"واتساب: "+st.whatsapp:"";
-      artGrid.innerHTML=st.articles.map(a=>`<article class="card">${a.image?`<img class="c-img" src="${esc(a.image)}" alt="${esc(a.title)}"/>`:`<div class="c-top">${esc(a.tag||"مقال يومي")}</div>`}<div class="c-body"><span class="tag">${esc(a.tag||"مقال يومي")}</span><h3>${esc(a.title)}</h3><p>${esc(a.body)}</p></div></article>`).join("");
-      bookGrid.innerHTML=st.books.map(b=>{ const h=b.fileUrl||b.fileData||""; const l=b.fileName?`تحميل: ${esc(b.fileName)}`:"فتح الملف";
-        return `<div class="card">${b.image?`<img class="c-img" src="${esc(b.image)}" alt="${esc(b.title)}"/>`:`<div class="c-top">كتاب / ملف</div>`}<div class="c-body"><span class="tag">إصدار</span><h3>${esc(b.title)}</h3><p>${esc(b.desc)}</p><div class="c-foot"><span class="price">${esc(b.price||"متاح")}</span><div style="display:flex;gap:6px;flex-wrap:wrap;">${h?`<a class="btn btn-s btn-sm" href="${esc(h)}" download="${esc(b.fileName||"file")}" target="_blank" rel="noopener">${l}</a>`:""}<a class="btn btn-p btn-sm" href="${u}" target="_blank" rel="noopener">طلب / استفسار</a></div></div></div></div>`; }).join("");
-      socPub.innerHTML=st.socials.map(s=>`<a class="soc" href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.name)}</a>`).join("");
-      if(openAd) rAdm();
+
+    let state = loadState(), isAdmin = false;
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORE_KEY);
+        if (!raw) return structuredClone(DEFAULT_STATE);
+        const parsed = JSON.parse(raw);
+        return { ...structuredClone(DEFAULT_STATE), ...parsed, book: { ...DEFAULT_STATE.book, ...(parsed.book || {}) } };
+      } catch { return structuredClone(DEFAULT_STATE); }
     }
-    function rAdm(){
-      cName.value=st.siteName; cWa.value=st.whatsapp; cBio.value=st.siteBio; cCon.value=st.consultDesc;
-      const sb=getSb(); sbUrl.value=sb.url||""; sbKey.value=sb.key||"";
-      lArt.innerHTML=st.articles.map(a=>`<div class="row"><strong>${esc(a.title)}</strong><button class="btn btn-d btn-sm" onclick="delA('${a.id}')">حذف</button></div>`).join("");
-      lBook.innerHTML=st.books.map(b=>`<div class="row"><strong>${esc(b.title)}</strong><button class="btn btn-d btn-sm" onclick="delB('${b.id}')">حذف</button></div>`).join("");
-      lSoc.innerHTML=st.socials.map(s=>`<div class="row"><strong>${esc(s.name)}</strong><button class="btn btn-d btn-sm" onclick="delS('${s.id}')">حذف</button></div>`).join("");
+    function saveState() {
+      localStorage.setItem(STORE_KEY, JSON.stringify(state));
+      render();
+      const sb = getSb();
+      if (sb.url && sb.key) pushSb(true);
     }
-    async function addArt(){ const t=aTitle.value.trim(), bd=aBody.value.trim(); if(!t||!bd) return alert("أدخل العنوان والنص.");
-      const img=aFile.files[0]?await toUrl(aFile.files[0]):aUrl.value.trim();
-      st.articles.unshift({id:"a"+Date.now(),title:t,tag:aTag.value.trim()||"مقال يومي",body:bd,image:img});
-      [aTitle,aTag,aUrl,aFile,aBody].forEach(x=>x.value=""); saveSt(); }
-    function delA(id){ st.articles=st.articles.filter(x=>x.id!==id); saveSt(); }
-    async function addBook(){ const t=bTitle.value.trim(); if(!t) return alert("أدخل اسم الكتاب.");
-      const img=bImgFile.files[0]?await toUrl(bImgFile.files[0]):bImgUrl.value.trim();
-      const fd=bFileUp.files[0]?await toUrl(bFileUp.files[0]):""; const fn=bFileUp.files[0]?bFileUp.files[0].name:"";
-      st.books.unshift({id:"b"+Date.now(),title:t,price:bPrice.value.trim()||"متاح",desc:bDesc.value.trim(),image:img,fileUrl:bFileUrl.value.trim(),fileData:fd,fileName:fn});
-      [bTitle,bPrice,bImgUrl,bImgFile,bFileUrl,bFileUp,bDesc].forEach(x=>x.value=""); saveSt(); }
-    function delB(id){ st.books=st.books.filter(x=>x.id!==id); saveSt(); }
-    function saveCon(){ st.siteName=cName.value.trim()||"وحيد صالح"; st.whatsapp=cWa.value.trim(); st.siteBio=cBio.value.trim(); st.consultDesc=cCon.value.trim(); saveSt(); alert("تم الحفظ."); }
-    function addSoc(){ const n=sName.value.trim(), u=sUrl.value.trim(); if(!n||!u) return alert("أدخل المنصة والرابط."); st.socials.push({id:"s"+Date.now(),name:n,url:u}); sName.value=""; sUrl.value=""; saveSt(); }
-    function delS(id){ st.socials=st.socials.filter(x=>x.id!==id); saveSt(); }
-    function expJ(){ const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([JSON.stringify(st,null,2)],{type:"application/json"})); a.download="wahidsalh7-backup.json"; a.click(); }
-    function impJson(e){ const f=e.target.files[0]; if(!f) return; const r=new FileReader(); r.onload=()=>{ try{ st={...structuredClone(DEF),...JSON.parse(r.result)}; saveSt(); alert("تم الاستيراد."); }catch{ alert("ملف غير صالح."); } }; r.readAsText(f); }
-    function tglSec(id,btn){ const e=document.getElementById(id); const h=e.style.display==="none"; e.style.display=h?"":"none"; btn.textContent=h?"طي / فتح":"فتح"; }
-    function openTab(id,btn){ document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active")); document.querySelectorAll(".pane").forEach(x=>x.classList.remove("active")); btn.classList.add("active"); document.getElementById(id).classList.add("active"); }
-    function openPin(){ if(openAd){ admBox.classList.add("open"); rAdm(); admBox.scrollIntoView({behavior:"smooth"}); return; } pErr.textContent=""; pIn.value=""; pMod.classList.add("open"); setTimeout(()=>pIn.focus(),50); }
-    function closePin(){ pMod.classList.remove("open"); }
-    function chkPin(){ if(pIn.value.trim()===PIN){ openAd=true; closePin(); admBox.classList.add("open"); rAdm(); admBox.scrollIntoView({behavior:"smooth"}); }else pErr.textContent="رمز PIN غير صحيح."; }
-    function lockAdm(){ openAd=false; admBox.classList.remove("open"); }
-    render(); const init=getSb(); if(init.url&&init.key) pullSb();
+    const esc = s => String(s || "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+    const fileToData = f => new Promise((res, rej) => { if (!f) return res(""); const r = new FileReader(); r.onload = () => res(r.result); r.onerror = rej; r.readAsDataURL(f); });
+    const waLink = msg => {
+      const num = (state.whatsapp || "").replace(/[^\d]/g, "");
+      const q = msg ? "?text=" + encodeURIComponent(msg) : "";
+      return num ? `https://wa.me/${num}${q}` : `https://wa.me/${q}`;
+    };
+
+    function render() {
+      document.title = `${state.logo} | ${state.name}`;
+      navBrand.textContent = state.logo;
+      heroLogo.textContent = state.logo;
+      heroBadge.textContent = state.badge;
+      heroSub.textContent = state.heroSub;
+      heroSec.style.backgroundImage = state.heroImg ? `url('${state.heroImg}')` : "";
+
+      avatarBox.innerHTML = state.avatarImg ? `<img src="${esc(state.avatarImg)}" alt="${esc(state.name)}" />` : "أضف صورتك الشخصية من لوحة التحكم";
+      aboutName.textContent = state.name;
+      aboutRole.textContent = state.role;
+      aboutBio.textContent = state.bio;
+
+      servicesGrid.innerHTML = state.services.map(s => {
+        const href = s.link || waLink(`مرحباً ${state.name}، أرغب في الاستفسار أو الحجز بخصوص: ${s.title}`);
+        return `<div class="card"><div><span class="card-tag">${esc(s.tag)}</span><h3>${esc(s.title)}</h3><p>${esc(s.desc)}</p></div><div class="card-foot"><span class="price">${esc(s.price)}</span><a class="btn btn-primary btn-sm" href="${esc(href)}" target="_blank" rel="noopener">احجز / تواصل</a></div></div>`;
+      }).join("");
+
+      bookTitle.textContent = state.book.title;
+      bookPub.textContent = state.book.pub;
+      bookDesc.textContent = state.book.desc;
+      bookQuote.textContent = state.book.quote;
+      bookPrice.textContent = state.book.price;
+      paypalBtn.href = state.book.paypal || "#";
+      bookWaBtn.href = waLink(`مرحباً ${state.name}، أرغب في تأكيد طلب كتاب "${state.book.title}" واستلام النسخة.`);
+      bookCover.innerHTML = state.book.cover ? `<img src="${esc(state.book.cover)}" alt="${esc(state.book.title)}" />` : `${esc(state.book.title)}`;
+
+      articlesGrid.innerHTML = state.articles.map(a => `
+        <article class="card">
+          <div>
+            ${a.image ? `<img class="art-img" src="${esc(a.image)}" alt="${esc(a.title)}" />` : ""}
+            <span class="card-tag">${esc(a.tag)}</span>
+            <h3>${esc(a.title)}</h3>
+            <p>${esc(a.body)}</p>
+          </div>
+          ${a.link ? `<div class="card-foot"><a class="btn btn-soft btn-sm" href="${esc(a.link)}" target="_blank" rel="noopener">قراءة المزيد</a></div>` : ""}
+        </article>
+      `).join("");
+
+      contactDesc.textContent = state.contactDesc;
+      mainWaBtn.href = waLink(`مرحباً ${state.name}، أتواصل معك من موقع خطاب الروح.`);
+      socialsList.innerHTML = state.socials.map(so => `<a class="soc-link" href="${esc(so.url)}" target="_blank" rel="noopener">${esc(so.name)}</a>`).join("");
+
+      if (isAdmin) fillAdmin();
+    }
+
+    function fillAdmin() {
+      inLogo.value = state.logo; inBadge.value = state.badge; inHeroSub.value = state.heroSub;
+      inHeroUrl.value = state.heroImg.startsWith("data:") ? "" : state.heroImg;
+      inAvatarUrl.value = state.avatarImg.startsWith("data:") ? "" : state.avatarImg;
+      inName.value = state.name; inRole.value = state.role; inBio.value = state.bio;
+
+      bTitle.value = state.book.title; bPub.value = state.book.pub; bPrice.value = state.book.price;
+      bPaypal.value = state.book.paypal; bDesc.value = state.book.desc; bQuote.value = state.book.quote;
+      bCoverUrl.value = state.book.cover.startsWith("data:") ? "" : state.book.cover;
+
+      cWa.value = state.whatsapp; cDesc.value = state.contactDesc;
+      const sb = getSb(); sbUrl.value = sb.url || ""; sbKey.value = sb.key || "";
+
+      adminServices.innerHTML = state.services.map(s => `<div class="item-row"><strong>${esc(s.title)}</strong><button class="btn btn-danger btn-sm" onclick="delService('${s.id}')">حذف</button></div>`).join("");
+      adminArticles.innerHTML = state.articles.map(a => `<div class="item-row"><strong>${esc(a.title)}</strong><button class="btn btn-danger btn-sm" onclick="delArticle('${a.id}')">حذف</button></div>`).join("");
+      adminSocials.innerHTML = state.socials.map(so => `<div class="item-row"><strong>${esc(so.name)}</strong><button class="btn btn-danger btn-sm" onclick="delSocial('${so.id}')">حذف</button></div>`).join("");
+    }
+
+    async function saveIdentity() {
+      state.logo = inLogo.value.trim() || "خطاب الروح";
+      state.badge = inBadge.value.trim();
+      state.heroSub = inHeroSub.value.trim();
+      if (inHeroFile.files[0]) state.heroImg = await fileToData(inHeroFile.files[0]);
+      else if (inHeroUrl.value.trim()) state.heroImg = inHeroUrl.value.trim();
+      if (inAvatarFile.files[0]) state.avatarImg = await fileToData(inAvatarFile.files[0]);
+      else if (inAvatarUrl.value.trim()) state.avatarImg = inAvatarUrl.value.trim();
+      state.name = inName.value.trim() || "وحيد صالح";
+      state.role = inRole.value.trim();
+      state.bio = inBio.value.trim();
+      saveState(); alert("تم حفظ الهوية والصور.");
+    }
+    function addService() {
+      const title = sTitle.value.trim(); if (!title) return alert("أدخل عنوان الخدمة.");
+      state.services.push({ id: "s" + Date.now(), title, tag: sTag.value.trim() || "خدمة", price: sPrice.value.trim() || "تواصل", link: sLink.value.trim(), desc: sDesc.value.trim() });
+      [sTitle, sTag, sPrice, sLink, sDesc].forEach(el => el.value = ""); saveState();
+    }
+    function delService(id) { state.services = state.services.filter(x => x.id !== id); saveState(); }
+
+    async function saveBook() {
+      state.book.title = bTitle.value.trim(); state.book.pub = bPub.value.trim();
+      state.book.price = bPrice.value.trim(); state.book.paypal = bPaypal.value.trim();
+      state.book.desc = bDesc.value.trim(); state.book.quote = bQuote.value.trim();
+      if (bCoverFile.files[0]) state.book.cover = await fileToData(bCoverFile.files[0]);
+      else if (bCoverUrl.value.trim()) state.book.cover = bCoverUrl.value.trim();
+      saveState(); alert("تم حفظ بيانات الكتاب.");
+    }
+    async function addArticle() {
+      const title = aTitle.value.trim(), body = aBody.value.trim(); if (!title || !body) return alert("أدخل العنوان والنص.");
+      const image = aFile.files[0] ? await fileToData(aFile.files[0]) : "";
+      state.articles.unshift({ id: "a" + Date.now(), title, tag: aTag.value.trim() || "مقال", body, image, link: aLink.value.trim() });
+      [aTitle, aTag, aFile, aLink, aBody].forEach(el => el.value = ""); saveState();
+    }
+    function delArticle(id) { state.articles = state.articles.filter(x => x.id !== id); saveState(); }
+
+    function saveContact() { state.whatsapp = cWa.value.trim(); state.contactDesc = cDesc.value.trim(); saveState(); alert("تم حفظ بيانات التواصل."); }
+    function addSocial() { const name = socName.value.trim(), url = socUrl.value.trim(); if (!name || !url) return alert("أدخل اسم المنصة والرابط."); state.socials.push({ id: "so" + Date.now(), name, url }); socName.value = ""; socUrl.value = ""; saveState(); }
+    function delSocial(id) { state.socials = state.socials.filter(x => x.id !== id); saveState(); }
+
+    function getSb() { try { return JSON.parse(localStorage.getItem(SB_KEY) || "{}"); } catch { return {}; } }
+    function saveSb() { localStorage.setItem(SB_KEY, JSON.stringify({ url: sbUrl.value.trim().replace(/\/+$/,""), key: sbKey.value.trim() })); sbStatus.textContent = "تم حفظ إعدادات Supabase."; }
+    async function pushSb(silent = false) {
+      const sb = getSb(); if (!sb.url || !sb.key) { if (!silent) sbStatus.textContent = "أدخل URL و Key أولاً."; return; }
+      try {
+        const body = JSON.stringify({ id: "main", data: state, updated_at: new Date().toISOString() });
+        const headers = { "Content-Type": "application/json", "apikey": sb.key, "Authorization": "Bearer " + sb.key, "Prefer": "return=representation" };
+        let r = await fetch(`${sb.url}/rest/v1/site_state?id=eq.main`, { method: "PATCH", headers, body });
+        const rows = await r.json();
+        if (!Array.isArray(rows) || !rows.length) r = await fetch(`${sb.url}/rest/v1/site_state`, { method: "POST", headers, body });
+        if (!r.ok) throw 0;
+        if (!silent) sbStatus.textContent = "تمت المزامنة والرفع إلى Supabase.";
+      } catch { if (!silent) sbStatus.textContent = "تعذر الرفع إلى Supabase."; }
+    }
+    async function pullSb() {
+      const sb = getSb(); if (!sb.url || !sb.key) { sbStatus.textContent = "أدخل URL و Key أولاً."; return; }
+      try {
+        const r = await fetch(`${sb.url}/rest/v1/site_state?id=eq.main&select=data`, { headers: { "apikey": sb.key, "Authorization": "Bearer " + sb.key } });
+        const rows = await r.json();
+        if (Array.isArray(rows) && rows[0]?.data) { state = { ...structuredClone(DEFAULT_STATE), ...rows[0].data }; localStorage.setItem(STORE_KEY, JSON.stringify(state)); render(); sbStatus.textContent = "تم الجلب من Supabase."; }
+        else sbStatus.textContent = "لا يوجد سجل محفوظ.";
+      } catch { sbStatus.textContent = "تعذر الجلب من Supabase."; }
+    }
+    function exportBackup() { const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([JSON.stringify(state, null, 2)], { type: "application/json" })); a.download = "khetab-alrouh-backup.json"; a.click(); }
+    function importBackup(e) { const f = e.target.files[0]; if (!f) return; const r = new FileReader(); r.onload = () => { try { state = { ...structuredClone(DEFAULT_STATE), ...JSON.parse(r.result) }; saveState(); alert("تم استيراد النسخة الاحتياطية."); } catch { alert("ملف غير صالح."); } }; r.readAsText(f); }
+
+    function switchTab(id, btn) { document.querySelectorAll(".tab").forEach(t => t.classList.remove("active")); document.querySelectorAll(".pane").forEach(p => p.classList.remove("active")); btn.classList.add("active"); document.getElementById(id).classList.add("active"); }
+    function openPin() { if (isAdmin) { adminPanel.classList.add("open"); fillAdmin(); adminPanel.scrollIntoView({ behavior: "smooth" }); return; } pinErr.textContent = ""; pinInput.value = ""; pinModal.classList.add("open"); setTimeout(() => pinInput.focus(), 50); }
+    function closePin() { pinModal.classList.remove("open"); }
+    function checkPin() { if (pinInput.value.trim() === PIN) { isAdmin = true; closePin(); adminPanel.classList.add("open"); fillAdmin(); adminPanel.scrollIntoView({ behavior: "smooth" }); } else pinErr.textContent = "رمز PIN غير صحيح."; }
+    function closeAdmin() { isAdmin = false; adminPanel.classList.remove("open"); }
+
+    render();
+    const initSb = getSb();
+    if (initSb.url && initSb.key) pullSb();
   </script>
 </body>
 </html>
