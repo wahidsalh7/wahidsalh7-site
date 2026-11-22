@@ -610,7 +610,7 @@
     function delSocial(id) { state.socials = state.socials.filter(x => x.id !== id); saveState(); }
 
     function getSb() { try { const d = JSON.parse(localStorage.getItem(SB_KEY) || "{}"); return { url: d.url || "https://nwbzfpcdheqjuubpndep.supabase.co", key: d.key || "sb_publishable_ZUWpZQob_gJoNsRWm-aOSQ_7kJqi1pn" }; } catch { return { url: "https://nwbzfpcdheqjuubpndep.supabase.co", key: "sb_publishable_ZUWpZQob_gJoNsRWm-aOSQ_7kJqi1pn" }; } }
-    function saveSb() { localStorage.setItem(SB_KEY, JSON.stringify({ url: sbUrl.value.trim().replace(/\/+$/,""), key: sbKey.value.trim() })); sbStatus.textContent = "تم حفظ إعدادات Supabase."; }
+    function saveSb() { localStorage.setItem(SB_KEY, JSON.stringify({ url: sbUrl.value.trim().replace(/\/+$/,""), key: sbKey.value.trim() })); sbStatus.textContent = "تم حفظ إعدادات Supabase وجارٍ الرفع..."; const sb = getSb(); if (sb.url && sb.key) pushSb(false); }
     async function pushSb(silent = false) {
       const sb = getSb(); if (!sb.url || !sb.key) { if (!silent) sbStatus.textContent = "أدخل URL و Key أولاً."; return; }
       try {
