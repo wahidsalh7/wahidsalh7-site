@@ -306,6 +306,12 @@
           </div>
         </div>
       </div>
+    
+        <div id="extraBooksSection" style="margin-top:42px;display:none;">
+          <h3 style="margin-bottom:14px;color:var(--primary);">إصدارات وكتب إضافية</h3>
+          <div class="grid" id="extraBooksGrid"></div>
+        </div>
+      </div>
     </section>
 
     <section class="block" id="articles" style="background: var(--soft);">
@@ -381,6 +387,25 @@
             <div class="field"><label>نبذة الكتاب</label><textarea id="bDesc"></textarea></div>
             <div class="field"><label>اقتباس مميز من الكتاب</label><textarea id="bQuote"></textarea></div>
             <button class="btn btn-primary" onclick="saveBook()">حفظ بيانات الكتاب</button>
+            <!-- W_EXTRA_BOOKS_UI_START -->
+            <hr style="margin:24px 0;border:none;border-top:1px solid var(--border);" />
+            <h4 style="margin:0 0 8px;">إضافة كتاب إضافي جديد (مع رابط شراء مثل Gumroad وصورة)</h4>
+            <p style="margin:0 0 14px;color:var(--muted);font-size:0.9rem;">أضف كتباً إضافية مع الغلاف ورابط الشراء ليُحفظ ويُرفع تلقائياً إلى Supabase.</p>
+            <div class="form-grid">
+              <div class="field"><label>اسم الكتاب الجديد</label><input id="newWbTitle" placeholder="مثال: عنوان الكتاب" /></div>
+              <div class="field"><label>الكاتب / سطر فرعي</label><input id="newWbAuthor" placeholder="وحيد صالح" /></div>
+              <div class="field"><label>رابط الشراء (Gumroad أو غيره)</label><input id="newWbUrl" placeholder="https://..." /></div>
+              <div class="field"><label>صورة الغلاف (من الجهاز)</label><input type="file" id="newWbFile" accept="image/*" /></div>
+              <div class="field"><label>أو رابط صورة الغلاف</label><input id="newWbUrlImg" placeholder="https://..." /></div>
+            </div>
+            <div class="field"><label>ملخص الكتاب الجديد</label><textarea id="newWbSummary" placeholder="نبذة مختصرة عن الكتاب..."></textarea></div>
+            <button type="button" class="btn btn-primary" onclick="addWahidBook()">إضافة الكتاب وحفظه للسحابة</button>
+
+            <hr style="margin:24px 0;border:none;border-top:1px solid var(--border);" />
+            <h4 style="margin:0 0 8px;">الكتب الإضافية الحالية (تعديل الصور والروابط أو الحذف)</h4>
+            <div id="wAdminExtraBooksList" style="display:grid;gap:14px;margin-bottom:14px;"></div>
+            <button type="button" class="btn btn-soft" onclick="saveWahidBooksChanges()">حفظ تعديلات الكتب ورفعها للسحابة</button>
+            <!-- W_EXTRA_BOOKS_UI_END -->
           </div>
 
           <div class="pane" id="p4">
@@ -467,6 +492,7 @@
         paypal: "https://paypal.me/",
         cover: ""
       },
+      extraBooks: [],
       services: [
         { id: "s1", tag: "البرنامج الأساسي • فردي 1 على 1", title: "برنامج المتابعة الشخصية (40 يوماً)", desc: "مرافقة شخصية فردية مكثفة لمدة 40 يوماً بدون مجموعات، للعمل بعمق وخصوصية على جذور المشاعر وأنماط التفكير وبناء التوازن الداخلي.", price: "40 يوماً — متابعة فردية", link: "" },
         { id: "s2", tag: "جلسة متخصصة", title: "جلسات تحرير المشاعر", desc: "جلسات فردية مخصصة للتعرف على المشاعر المكبوتة والعوالق الداخلية وتحريرها بهدوء ووعي.", price: "جلسة فردية", link: "" },
@@ -488,7 +514,7 @@
         const raw = localStorage.getItem(STORE_KEY);
         if (!raw) return structuredClone(DEFAULT_STATE);
         const parsed = JSON.parse(raw);
-        return { ...structuredClone(DEFAULT_STATE), ...parsed, book: { ...DEFAULT_STATE.book, ...(parsed.book || {}) } };
+        return { ...structuredClone(DEFAULT_STATE), ...parsed, book: { ...DEFAULT_STATE.book, ...(parsed.book || {}) }, extraBooks: Array.isArray(parsed.extraBooks) ? parsed.extraBooks : [] };
       } catch { return structuredClone(DEFAULT_STATE); }
     }
     function saveState() {
@@ -549,7 +575,180 @@
       socialsList.innerHTML = state.socials.map(so => `<a class="soc-link" href="${esc(so.url)}" target="_blank" rel="noopener">${esc(so.name)}</a>`).join("");
 
       if (isAdmin) fillAdmin();
+    
+      renderExtraBooks();
+      renderAdminExtraBooks();
     }
+
+    // W_BOOKS_SYNC_START
+    const compressCoverFile = (file, maxW = 700, quality = 0.78) => new Promise((resolve, reject) => {
+      if (!file) return resolve("");
+      const reader = new FileReader();
+      reader.onerror = reject;
+      reader.onload = () => {
+        const img = new Image();
+        img.onerror = () => fileToData(file).then(resolve, reject);
+        img.onload = () => {
+          const scale = Math.min(1, maxW / (img.width || maxW));
+          const w = Math.max(1, Math.round((img.width || maxW) * scale));
+          const h = Math.max(1, Math.round((img.height || maxW) * scale));
+          const canvas = document.createElement("canvas");
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, w, h);
+          try {
+            resolve(canvas.toDataURL("image/jpeg", quality));
+          } catch {
+            resolve(reader.result);
+          }
+        };
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    async function saveAndSync(msg = "تم الحفظ والرفع إلى السحابة.") {
+      localStorage.setItem(STORE_KEY, JSON.stringify(state));
+      render();
+      const sb = getSb();
+      if (!sb.url || !sb.key) {
+        if (typeof sbStatus !== "undefined" && sbStatus) sbStatus.textContent = "تم الحفظ محلياً (أدخل بيانات Supabase للرفع السحابي).";
+        if (msg) alert(msg.replace(" والرفع إلى السحابة", " محلياً (لم يتم ضبط Supabase بعد)"));
+        return;
+      }
+      await pushSb(false);
+      if (msg) alert(msg);
+    }
+
+    function getExtraBooksList() {
+      return Array.isArray(state.extraBooks) ? state.extraBooks : [];
+    }
+
+    async function addWahidBook() {
+      const titleEl = document.getElementById("newWbTitle");
+      const authorEl = document.getElementById("newWbAuthor");
+      const urlEl = document.getElementById("newWbUrl");
+      const fileEl = document.getElementById("newWbFile");
+      const urlImgEl = document.getElementById("newWbUrlImg");
+      const summaryEl = document.getElementById("newWbSummary");
+
+      const title = ((titleEl && titleEl.value) || "").trim();
+      if (!title) return alert("أدخل اسم الكتاب أولاً.");
+
+      let img = "";
+      if (fileEl && fileEl.files && fileEl.files[0]) {
+        img = await compressCoverFile(fileEl.files[0]);
+      } else if (urlImgEl && urlImgEl.value.trim()) {
+        img = urlImgEl.value.trim();
+      }
+
+      const list = getExtraBooksList().slice();
+      list.push({
+        id: "wb_" + Date.now(),
+        title,
+        author: ((authorEl && authorEl.value) || "").trim() || (state.name || "وحيد صالح"),
+        summary: ((summaryEl && summaryEl.value) || "").trim(),
+        url: ((urlEl && urlEl.value) || "").trim() || waLink(`مرحباً ${state.name}، أرغب في طلب كتاب "${title}"`),
+        img
+      });
+
+      state.extraBooks = list;
+      if (titleEl) titleEl.value = "";
+      if (authorEl) authorEl.value = "";
+      if (summaryEl) summaryEl.value = "";
+      if (urlImgEl) urlImgEl.value = "";
+      if (fileEl) fileEl.value = "";
+      if (urlEl) urlEl.value = "";
+
+      await saveAndSync("تمت إضافة الكتاب وحفظه ورفعه للسحابة.");
+    }
+
+    async function saveWahidBooksChanges() {
+      const list = getExtraBooksList().slice();
+      for (let i = 0; i < list.length; i++) {
+        const tEl = document.getElementById("wbEditTitle_" + i);
+        const aEl = document.getElementById("wbEditAuthor_" + i);
+        const sEl = document.getElementById("wbEditSummary_" + i);
+        const uEl = document.getElementById("wbEditUrl_" + i);
+        const fEl = document.getElementById("wbEditFile_" + i);
+        const uiEl = document.getElementById("wbEditImgUrl_" + i);
+
+        if (tEl && tEl.value.trim()) list[i].title = tEl.value.trim();
+        if (aEl) list[i].author = aEl.value.trim();
+        if (sEl) list[i].summary = sEl.value.trim();
+        if (uEl && uEl.value.trim()) list[i].url = uEl.value.trim();
+
+        if (fEl && fEl.files && fEl.files[0]) {
+          list[i].img = await compressCoverFile(fEl.files[0]);
+        } else if (uiEl && uiEl.value.trim()) {
+          list[i].img = uiEl.value.trim();
+        }
+      }
+      state.extraBooks = list;
+      await saveAndSync("تم حفظ تعديلات الكتب ورفعها للسحابة.");
+    }
+
+    async function delWahidBook(idx) {
+      const list = getExtraBooksList().slice();
+      if (!confirm("هل تريد حذف هذا الكتاب؟")) return;
+      list.splice(idx, 1);
+      state.extraBooks = list;
+      await saveAndSync("تم حذف الكتاب وتحديث السحابة.");
+    }
+
+    function renderAdminExtraBooks() {
+      const box = document.getElementById("wAdminExtraBooksList");
+      if (!box) return;
+      const list = getExtraBooksList();
+      if (!list.length) {
+        box.innerHTML = `<p style="color:var(--muted);font-size:0.9rem;">لا توجد كتب إضافية بعد. أضف كتاباً من النموذج بالأعلى.</p>`;
+        return;
+      }
+      box.innerHTML = list.map((b, i) => `
+        <div style="border:1px solid var(--border);border-radius:12px;padding:12px;background:var(--card,#fff);">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px;">
+            <strong>${esc(b.title || ("كتاب " + (i + 1)))}</strong>
+            <button type="button" class="btn btn-soft btn-sm" onclick="delWahidBook(${i})">حذف</button>
+          </div>
+          <div class="form-grid">
+            <div class="field"><label>اسم الكتاب</label><input id="wbEditTitle_${i}" value="${esc(b.title)}" /></div>
+            <div class="field"><label>الكاتب / سطر فرعي</label><input id="wbEditAuthor_${i}" value="${esc(b.author || "")}" /></div>
+            <div class="field"><label>رابط الشراء</label><input id="wbEditUrl_${i}" value="${esc(b.url || "")}" /></div>
+            <div class="field"><label>تغيير صورة الغلاف (من الجهاز)</label><input type="file" id="wbEditFile_${i}" accept="image/*" /></div>
+            <div class="field"><label>أو رابط صورة الغلاف</label><input id="wbEditImgUrl_${i}" value="${b.img && !b.img.startsWith("data:") ? esc(b.img) : ""}" placeholder="https://..." /></div>
+          </div>
+          <div class="field"><label>الملخص</label><textarea id="wbEditSummary_${i}">${esc(b.summary || "")}</textarea></div>
+        </div>
+      `).join("");
+    }
+
+    function renderExtraBooks() {
+      const wrap = document.getElementById("extraBooksSection");
+      const grid = document.getElementById("extraBooksGrid");
+      if (!wrap || !grid) return;
+      const list = getExtraBooksList();
+      if (!list.length) {
+        wrap.style.display = "none";
+        grid.innerHTML = "";
+        return;
+      }
+      wrap.style.display = "block";
+      grid.innerHTML = list.map(b => `
+        <article class="card">
+          <div>
+            ${b.img ? `<img class="art-img" src="${esc(b.img)}" alt="${esc(b.title)}" onerror="this.style.display='none'" />` : ""}
+            <span class="card-tag">${esc(b.author || state.name || "إصدار")}</span>
+            <h3>${esc(b.title)}</h3>
+            <p>${esc(b.summary || "")}</p>
+          </div>
+          <div class="card-foot">
+            <a class="btn btn-primary btn-sm" href="${esc(b.url || "#")}" target="_blank" rel="noopener noreferrer">الانتقال لصفحة الشراء</a>
+          </div>
+        </article>
+      `).join("");
+    }
+    // W_BOOKS_SYNC_END
 
     function fillAdmin() {
       inLogo.value = state.logo; inBadge.value = state.badge; inHeroSub.value = state.heroSub;
@@ -580,14 +779,14 @@
       state.name = inName.value.trim() || "وحيد صالح";
       state.role = inRole.value.trim();
       state.bio = inBio.value.trim();
-      saveState(); alert("تم حفظ الهوية والصور.");
+      await saveAndSync(""); alert("تم حفظ الهوية والصور.");
     }
-    function addService() {
+    async function addService() {
       const title = sTitle.value.trim(); if (!title) return alert("أدخل عنوان الخدمة.");
       state.services.push({ id: "s" + Date.now(), title, tag: sTag.value.trim() || "خدمة", price: sPrice.value.trim() || "تواصل", link: sLink.value.trim(), desc: sDesc.value.trim() });
-      [sTitle, sTag, sPrice, sLink, sDesc].forEach(el => el.value = ""); saveState();
+      [sTitle, sTag, sPrice, sLink, sDesc].forEach(el => el.value = ""); await saveAndSync("");
     }
-    function delService(id) { state.services = state.services.filter(x => x.id !== id); saveState(); }
+    async function delService(id) { state.services = state.services.filter(x => x.id !== id); await saveAndSync(""); }
 
     async function saveBook() {
       state.book.title = bTitle.value.trim(); state.book.pub = bPub.value.trim();
@@ -595,19 +794,19 @@
       state.book.desc = bDesc.value.trim(); state.book.quote = bQuote.value.trim();
       if (bCoverFile.files[0]) state.book.cover = await fileToData(bCoverFile.files[0]);
       else if (bCoverUrl.value.trim()) state.book.cover = bCoverUrl.value.trim();
-      saveState(); alert("تم حفظ بيانات الكتاب.");
+      await saveAndSync("تم حفظ بيانات الكتاب ورفعها للسحابة.");
     }
     async function addArticle() {
       const title = aTitle.value.trim(), body = aBody.value.trim(); if (!title || !body) return alert("أدخل العنوان والنص.");
       const image = aFile.files[0] ? await fileToData(aFile.files[0]) : "";
       state.articles.unshift({ id: "a" + Date.now(), title, tag: aTag.value.trim() || "مقال", body, image, link: aLink.value.trim() });
-      [aTitle, aTag, aFile, aLink, aBody].forEach(el => el.value = ""); saveState();
+      [aTitle, aTag, aFile, aLink, aBody].forEach(el => el.value = ""); await saveAndSync("");
     }
-    function delArticle(id) { state.articles = state.articles.filter(x => x.id !== id); saveState(); }
+    async function delArticle(id) { state.articles = state.articles.filter(x => x.id !== id); await saveAndSync(""); }
 
-    function saveContact() { state.whatsapp = cWa.value.trim(); state.contactDesc = cDesc.value.trim(); saveState(); alert("تم حفظ بيانات التواصل."); }
-    function addSocial() { const name = socName.value.trim(), url = socUrl.value.trim(); if (!name || !url) return alert("أدخل اسم المنصة والرابط."); state.socials.push({ id: "so" + Date.now(), name, url }); socName.value = ""; socUrl.value = ""; saveState(); }
-    function delSocial(id) { state.socials = state.socials.filter(x => x.id !== id); saveState(); }
+    async function saveContact() { state.whatsapp = cWa.value.trim(); state.contactDesc = cDesc.value.trim(); await saveAndSync("تم حفظ بيانات التواصل ورفعها للسحابة."); }
+    async function addSocial() { const name = socName.value.trim(), url = socUrl.value.trim(); if (!name || !url) return alert("أدخل اسم المنصة والرابط."); state.socials.push({ id: "so" + Date.now(), name, url }); socName.value = ""; socUrl.value = ""; await saveAndSync(""); }
+    async function delSocial(id) { state.socials = state.socials.filter(x => x.id !== id); await saveAndSync(""); }
 
     function getSb() { try { const d = JSON.parse(localStorage.getItem(SB_KEY) || "{}"); return { url: d.url || "https://nwbzfpcdheqjuubpndep.supabase.co", key: d.key || "sb_publishable_ZUWpZQob_gJoNsRWm-aOSQ_7kJqi1pn" }; } catch { return { url: "https://nwbzfpcdheqjuubpndep.supabase.co", key: "sb_publishable_ZUWpZQob_gJoNsRWm-aOSQ_7kJqi1pn" }; } }
     function saveSb() { localStorage.setItem(SB_KEY, JSON.stringify({ url: sbUrl.value.trim().replace(/\/+$/,""), key: sbKey.value.trim() })); sbStatus.textContent = "تم حفظ إعدادات Supabase."; }
@@ -633,7 +832,7 @@
       } catch { sbStatus.textContent = "تعذر الجلب من Supabase."; }
     }
     function exportBackup() { const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([JSON.stringify(state, null, 2)], { type: "application/json" })); a.download = "khetab-alrouh-backup.json"; a.click(); }
-    function importBackup(e) { const f = e.target.files[0]; if (!f) return; const r = new FileReader(); r.onload = () => { try { state = { ...structuredClone(DEFAULT_STATE), ...JSON.parse(r.result) }; saveState(); alert("تم استيراد النسخة الاحتياطية."); } catch { alert("ملف غير صالح."); } }; r.readAsText(f); }
+    function importBackup(e) { const f = e.target.files[0]; if (!f) return; const r = new FileReader(); r.onload = () => { try { state = { ...structuredClone(DEFAULT_STATE), ...JSON.parse(r.result) }; await saveAndSync(""); alert("تم استيراد النسخة الاحتياطية."); } catch { alert("ملف غير صالح."); } }; r.readAsText(f); }
 
     function switchTab(id, btn) { document.querySelectorAll(".tab").forEach(t => t.classList.remove("active")); document.querySelectorAll(".pane").forEach(p => p.classList.remove("active")); btn.classList.add("active"); document.getElementById(id).classList.add("active"); }
     function openPin() { if (isAdmin) { adminPanel.classList.add("open"); fillAdmin(); adminPanel.scrollIntoView({ behavior: "smooth" }); return; } pinErr.textContent = ""; pinInput.value = ""; pinModal.classList.add("open"); setTimeout(() => pinInput.focus(), 50); }
