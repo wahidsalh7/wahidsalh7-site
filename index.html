@@ -949,6 +949,42 @@
       if (m) m.style.display = "none";
     }
 
+    function wbSyncBookingsFromCloud() {
+      try {
+        var sb = (typeof getSb === "function") ? getSb() : { url: "https://nwbzfpcdheqjuubpndep.supabase.co", key: "sb_publishable_ZUWpZQob_gJoNsRWm-aOSQ_7kJqi1pn" };
+        if (!sb || !sb.url || !sb.key) return;
+        fetch(sb.url.replace(/\/+$/, "") + "/rest/v1/bookings?select=*&order=created_at.desc", {
+          method: "GET",
+          headers: {
+            "apikey": sb.key,
+            "Authorization": "Bearer " + sb.key
+          }
+        })
+        .then(function(r) { return r.ok ? r.json() : null; })
+        .then(function(rows) {
+          if (!Array.isArray(rows)) return;
+          var mapped = rows.map(function(r) {
+            return {
+              id: r.id,
+              remoteId: r.id,
+              service: r.service_title || "خدمة",
+              price: r.service_price || "",
+              name: r.customer_name || "",
+              phone: r.customer_contact || "",
+              day: r.preferred_date || "",
+              receiptRef: r.receipt_ref || "",
+              status: r.status || "قيد المراجعة",
+              createdAt: r.created_at ? new Date(r.created_at).toLocaleString("ar") : ""
+            };
+          });
+          state.bookings = mapped;
+          saveState();
+          wbRenderList(true);
+        })
+        .catch(function(e) { console.warn("Supabase bookings load error:", e); });
+      } catch (e) {}
+    }
+
     function wbSave(goWa) {
       var name = document.getElementById("wbName").value.trim();
       var phone = document.getElementById("wbPhone").value.trim();
@@ -958,8 +994,10 @@
       if (!Array.isArray(state.bookings)) state.bookings = [];
       var svcTitle = (wbSelected && wbSelected.title) ? wbSelected.title : (state.book && state.book.title) || "خدمة";
       var svcPrice = (wbSelected && wbSelected.price) ? wbSelected.price : (state.book && state.book.price) || "";
+      var localId = "b" + Date.now();
       var item = {
-        id: "b" + Date.now(),
+        id: localId,
+        remoteId: null,
         service: svcTitle,
         price: svcPrice,
         name: name,
@@ -971,19 +1009,23 @@
       };
       state.bookings.unshift(item);
       saveState();
-      wbRenderList();
+      wbRenderList(true);
       wbClose();
+
+      var msg = "حجز جديد:\nالخدمة: " + svcTitle + (svcPrice ? " (" + svcPrice + ")" : "") + "\nالاسم: " + name + "\nالتواصل: " + phone + "\nالموعد: " + day + (receiptRef ? "\nرقم الإيصال: " + receiptRef : "");
 
       try {
         var sb = (typeof getSb === "function") ? getSb() : { url: "https://nwbzfpcdheqjuubpndep.supabase.co", key: "sb_publishable_ZUWpZQob_gJoNsRWm-aOSQ_7kJqi1pn" };
         if (sb && sb.url && sb.key) {
-          fetch(sb.url.replace(/\/+$/, "") + "/rest/v1/bookings", {
+          var baseUrl = sb.url.replace(/\/+$/, "");
+          fetch(baseUrl + "/rest/v1/bookings", {
             method: "POST",
+            keepalive: true,
             headers: {
               "Content-Type": "application/json",
               "apikey": sb.key,
               "Authorization": "Bearer " + sb.key,
-              "Prefer": "return=minimal"
+              "Prefer": "return=representation"
             },
             body: JSON.stringify({
               service_title: item.service,
@@ -994,11 +1036,21 @@
               payment_method: (state.book && state.book.paypal) ? "تحويل / PayPal" : "تحويل بنكي",
               receipt_ref: item.receiptRef || null,
               notes: null,
-              status: "pending"
+              status: "قيد المراجعة"
             })
-          }).catch(function(e) { console.warn("Supabase booking sync error:", e); });
+          })
+          .then(function(r) { return r.ok ? r.json() : null; })
+          .then(function(created) {
+            if (Array.isArray(created) && created[0] && created[0].id) {
+              item.remoteId = created[0].id;
+              item.id = created[0].id;
+              saveState();
+              wbRenderList(true);
+            }
+          })
+          .catch(function(e) { console.warn("Supabase booking insert error:", e); });
 
-          fetch(sb.url.replace(/\/+$/, "") + "/functions/v1/swift-action", {
+          fetch(baseUrl + "/functions/v1/swift-action", {
             method: "POST",
             keepalive: true,
             headers: {
@@ -1008,45 +1060,82 @@
             },
             body: JSON.stringify({
               record: {
-                client_name: (item && item.name) ? item.name : "-",
+                client_name: item.name,
                 client_email: "-",
-                client_phone: (item && item.phone) ? item.phone : "-",
-                service_name: (item && item.service) ? item.service : "-",
-                booking_date: (item && item.day) ? item.day : "-",
+                client_phone: item.phone,
+                service_name: item.service,
+                booking_date: item.day,
                 booking_time: "-",
-                notes: "السعر: " + ((item && item.price) ? item.price : "-") + ((item && item.receiptRef) ? " | إيصال: " + item.receiptRef : ""),
-                status: "pending"
+                notes: "السعر: " + item.price + (item.receiptRef ? " | إيصال: " + item.receiptRef : ""),
+                status: "قيد المراجعة"
               }
             })
-          })
+          }).catch(function(e) { console.warn("Telegram edge function error:", e); });
         }
-      } catch (e) { console.warn("Supabase booking hook error:", e); }
+      } catch (e) {}
 
-      var msg = "مرحباً وحيد صالح، طلب حجز جديد:\n• الخدمة: " + item.service + " (" + item.price + ")\n• الاسم: " + item.name + "\n• التواصل: " + item.phone + "\n• الموعد: " + item.day + (item.receiptRef ? "\n• مرجع الإيصال: " + item.receiptRef : "");
       if (goWa) {
         var adminWaUrl = "https://wa.me/6281225329461?text=" + encodeURIComponent(msg);
-        window.open(adminWaUrl, "_blank", "noopener");
+        setTimeout(function() {
+          window.open(adminWaUrl, "_blank", "noopener");
+        }, 350);
       } else {
         alert("تم تسجيل الحجز بنجاح.");
       }
     }
+
     function wbSetStatus(id, st) {
       if (!Array.isArray(state.bookings)) return;
-      var row = state.bookings.find(function(x) { return x.id === id; });
+      var row = state.bookings.find(function(x) { return String(x.id) === String(id) || String(x.remoteId) === String(id); });
       if (!row) return;
       row.status = st;
       saveState();
-      wbRenderList();
+      wbRenderList(true);
+
+      try {
+        var sb = (typeof getSb === "function") ? getSb() : { url: "https://nwbzfpcdheqjuubpndep.supabase.co", key: "sb_publishable_ZUWpZQob_gJoNsRWm-aOSQ_7kJqi1pn" };
+        var targetId = row.remoteId || row.id;
+        if (sb && sb.url && sb.key && targetId && !String(targetId).startsWith("b17")) {
+          fetch(sb.url.replace(/\/+$/, "") + "/rest/v1/bookings?id=eq." + encodeURIComponent(targetId), {
+            method: "PATCH",
+            keepalive: true,
+            headers: {
+              "Content-Type": "application/json",
+              "apikey": sb.key,
+              "Authorization": "Bearer " + sb.key,
+              "Prefer": "return=minimal"
+            },
+            body: JSON.stringify({ status: st })
+          }).catch(function(e) { console.warn("Supabase booking status update error:", e); });
+        }
+      } catch (e) {}
     }
 
     function wbDel(id) {
       if (!Array.isArray(state.bookings)) return;
-      state.bookings = state.bookings.filter(function(x) { return x.id !== id; });
+      var row = state.bookings.find(function(x) { return String(x.id) === String(id) || String(x.remoteId) === String(id); });
+      var targetId = row ? (row.remoteId || row.id) : id;
+      state.bookings = state.bookings.filter(function(x) { return String(x.id) !== String(id) && String(x.remoteId) !== String(id); });
       saveState();
-      wbRenderList();
+      wbRenderList(true);
+
+      try {
+        var sb = (typeof getSb === "function") ? getSb() : { url: "https://nwbzfpcdheqjuubpndep.supabase.co", key: "sb_publishable_ZUWpZQob_gJoNsRWm-aOSQ_7kJqi1pn" };
+        if (sb && sb.url && sb.key && targetId && !String(targetId).startsWith("b17")) {
+          fetch(sb.url.replace(/\/+$/, "") + "/rest/v1/bookings?id=eq." + encodeURIComponent(targetId), {
+            method: "DELETE",
+            keepalive: true,
+            headers: {
+              "apikey": sb.key,
+              "Authorization": "Bearer " + sb.key
+            }
+          }).catch(function(e) { console.warn("Supabase booking delete error:", e); });
+        }
+      } catch (e) {}
     }
 
-    function wbRenderList() {
+    function wbRenderList(skipCloudSync) {
+      if (!skipCloudSync) wbSyncBookingsFromCloud();
       wbEnsureUI();
       var box = document.getElementById("wbList");
       if (!box) return;
