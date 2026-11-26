@@ -1197,9 +1197,9 @@
     }
 
     function wbApplyPaymentToClient() {
-      var info = state.paymentInfo || {};
-      var bankText = info.bank || "سيتم تزويدك ببيانات الحساب البنكي عند تأكيد الحجز.";
-      var paypalText = info.paypal || wbGetDefaultPaypal();
+      var info = (typeof state !== "undefined" && state.paymentInfo) ? state.paymentInfo : {};
+      var bankText = (info.bank && info.bank.trim()) ? info.bank.trim() : "سيتم تزويدك ببيانات الحساب البنكي عند تأكيد الحجز.";
+      var paypalText = (info.paypal && info.paypal.trim()) ? info.paypal.trim() : (typeof wbGetDefaultPaypal === "function" ? wbGetDefaultPaypal() : 'https://www.paypal.com/paypalme/WAHIDJerpi573?locale.x=en_US&country.x=ID');
 
       var pInput = document.getElementById("wbPaypalInput");
       if (pInput && !pInput.value.trim()) pInput.value = paypalText;
@@ -1208,21 +1208,58 @@
       targets.forEach(function(el) { el.textContent = bankText; });
 
       var pTargets = document.querySelectorAll("[data-pay-paypal], #wbPaypalDisplay, .wb-paypal-info");
-      pTargets.forEach(function(el) { el.textContent = paypalText; });
+      pTargets.forEach(function(el) {
+        if (el.tagName === "A") el.href = paypalText;
+        el.textContent = paypalText;
+      });
 
-      var modal = document.getElementById("wbModal") || document.querySelector("[id*=\"book\"][id*=\"Modal\"]");
-      if (modal && !document.getElementById("wbClientPaymentSummary")) {
-        var summary = document.createElement("div");
-        summary.id = "wbClientPaymentSummary";
-        summary.style.cssText = "margin:10px 0;padding:10px;border:1px dashed #94a3b8;border-radius:8px;background:#f8fafc;font-size:13px;line-height:1.6;";
-        modal.appendChild(summary);
+      var host = document.getElementById("wbForm") ||
+                 document.getElementById("wbModal") ||
+                 document.getElementById("bookingModal") ||
+                 document.getElementById("bookModal") ||
+                 document.querySelector("[role=\"dialog\"]") ||
+                 null;
+      if (!host) return;
+
+      var sumBox = host.querySelector("#wbClientPaymentSummary");
+      if (!sumBox) {
+        sumBox = document.createElement("div");
+        sumBox.id = "wbClientPaymentSummary";
+        sumBox.style.cssText = "margin:8px 0 10px;padding:10px 12px;border:1px solid #cbd5e1;border-radius:10px;background:#f8fafc;font-size:13px;line-height:1.7;color:#0f172a;text-align:right;";
+        var receiptEl = host.querySelector("#wbReceiptRef");
+        var submitBtn = host.querySelector("button[type=\"submit\"]");
+        if (receiptEl && receiptEl.parentElement) {
+          receiptEl.parentElement.insertBefore(sumBox, receiptEl.nextSibling);
+        } else if (submitBtn && submitBtn.parentElement) {
+          submitBtn.parentElement.insertBefore(sumBox, submitBtn);
+        } else {
+          host.appendChild(sumBox);
+        }
       }
-      var sumBox = document.getElementById("wbClientPaymentSummary");
-      if (sumBox) {
-        sumBox.innerHTML =
-          "<div><strong>التحويل البنكي:</strong> " + esc(bankText) + "</div>" +
-          "<div><strong>PayPal:</strong> " + esc(paypalText) + "</div>";
-      }
+
+      var safePaypal = typeof esc === "function" ? esc(paypalText) : paypalText;
+      var safeBank = typeof esc === "function" ? esc(bankText) : bankText;
+      var linkHtml = /^https?:\/\//i.test(paypalText)
+        ? "<a href=\"" + safePaypal + "\" target=\"_blank\" rel=\"noopener\" style=\"color:#0369a1;text-decoration:underline;word-break:break-all;font-weight:600;\">" + safePaypal + "</a>"
+        : "<span>" + safePaypal + "</span>";
+
+      sumBox.innerHTML =
+        "<div style=\"font-weight:700;margin-bottom:4px;\">بيانات الدفع للعميل</div>" +
+        "<div><strong>الحساب البنكي:</strong> " + safeBank + "</div>" +
+        "<div><strong>PayPal:</strong> " + linkHtml + "</div>";
+    }
+
+    if (!window.__wbPaymentObserverAttached) {
+      window.__wbPaymentObserverAttached = true;
+      document.addEventListener("click", function() {
+        setTimeout(function() { try { wbApplyPaymentToClient(); } catch (e) {} }, 60);
+      }, true);
+      try {
+        var obs = new MutationObserver(function() {
+          try { wbApplyPaymentToClient(); } catch (e) {}
+        });
+        obs.observe(document.documentElement || document.body, { childList: true, subtree: true, attributes: true });
+      } catch (e) {}
     }
 
 function wbRenderList(skipCloudSync) {
