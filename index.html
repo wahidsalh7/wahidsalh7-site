@@ -870,10 +870,281 @@
     function checkPin() { if (pinInput.value.trim() === PIN) { isAdmin = true; closePin(); adminPanel.classList.add("open"); fillAdmin(); adminPanel.scrollIntoView({ behavior: "smooth" }); } else pinErr.textContent = "رمز PIN غير صحيح."; }
     function closeAdmin() { isAdmin = false; adminPanel.classList.remove("open"); }
 
+    // === نظام الحجوزات والإيصالات لموقع وحيد صالح ===
+    let wbActiveService = { title: "", price: "" };
+    let wbReceiptData = "";
+    let wbReceiptName = "";
+
+    function ensureBookingUI() {
+      if (!document.getElementById("wbBookingModal")) {
+        const modal = document.createElement("div");
+        modal.id = "wbBookingModal";
+        modal.style.cssText = "display:none;position:fixed;inset:0;background:rgba(15,23,42,.62);z-index:9999;align-items:center;justify-content:center;padding:16px;";
+        modal.innerHTML = `
+          <div style="background:#fff;color:#0f172a;width:100%;max-width:480px;max-height:92vh;overflow:auto;border-radius:16px;padding:20px;box-shadow:0 20px 45px rgba(0,0,0,.28);direction:rtl;text-align:right;font-family:inherit;">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;border-bottom:1px solid #e2e8f0;padding-bottom:10px;margin-bottom:14px;">
+              <strong style="font-size:1.05rem;">تأكيد حجز خدمة وإرفاق الإيصال</strong>
+              <button type="button" onclick="wbCloseModal()" style="border:none;background:#f1f5f9;color:#0f172a;border-radius:8px;padding:4px 10px;cursor:pointer;font-weight:700;">✕</button>
+            </div>
+            <div id="wbServiceSummary" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:10px 12px;margin-bottom:12px;font-weight:700;color:#1e293b;"></div>
+            <form id="wbBookingForm" onsubmit="wbSubmitBooking(event)" style="display:grid;gap:10px;">
+              <div>
+                <label style="display:block;font-size:.88rem;margin-bottom:4px;font-weight:600;">الاسم الكامل *</label>
+                <input id="wbName" type="text" required placeholder="اكتب اسمك الكامل" style="width:100%;padding:9px 11px;border:1px solid #cbd5e1;border-radius:9px;font-family:inherit;" />
+              </div>
+              <div>
+                <label style="display:block;font-size:.88rem;margin-bottom:4px;font-weight:600;">رقم واتساب أو وسيلة تواصل *</label>
+                <input id="wbContact" type="text" required placeholder="مثال: +218... أو بريد إلكتروني" style="width:100%;padding:9px 11px;border:1px solid #cbd5e1;border-radius:9px;font-family:inherit;" />
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                <div>
+                  <label style="display:block;font-size:.88rem;margin-bottom:4px;font-weight:600;">اليوم / الموعد المقترح *</label>
+                  <input id="wbDate" type="text" required placeholder="مثال: الثلاثاء أو 2026-12-01" style="width:100%;padding:9px 11px;border:1px solid #cbd5e1;border-radius:9px;font-family:inherit;" />
+                </div>
+                <div>
+                  <label style="display:block;font-size:.88rem;margin-bottom:4px;font-weight:600;">طريقة الدفع</label>
+                  <select id="wbMethod" style="width:100%;padding:9px 11px;border:1px solid #cbd5e1;border-radius:9px;font-family:inherit;background:#fff;">
+                    <option value="تحويل بنكي">تحويل بنكي</option>
+                    <option value="PayPal">PayPal</option>
+                    <option value="تنسيق مباشر">تنسيق مباشر</option>
+                  </select>
+                </div>
+              </div>
+              <div>
+                <label style="display:block;font-size:.88rem;margin-bottom:4px;font-weight:600;">صورة إيصال الدفع *</label>
+                <input id="wbReceiptFile" type="file" accept="image/*" required onchange="wbHandleReceipt(this)" style="width:100%;padding:7px;border:1px dashed #94a3b8;border-radius:9px;font-family:inherit;background:#f8fafc;" />
+                <img id="wbReceiptPreview" alt="معاينة الإيصال" style="display:none;margin-top:8px;max-height:150px;width:auto;border-radius:8px;border:1px solid #e2e8f0;" />
+              </div>
+              <div>
+                <label style="display:block;font-size:.88rem;margin-bottom:4px;font-weight:600;">ملاحظات إضافية</label>
+                <textarea id="wbNotes" rows="2" placeholder="أي تفاصيل تود إضافتها للجلسة أو الطلب..." style="width:100%;padding:8px 11px;border:1px solid #cbd5e1;border-radius:9px;font-family:inherit;"></textarea>
+              </div>
+              <div id="wbError" style="color:#dc2626;font-size:.86rem;min-height:18px;"></div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px;">
+                <button type="submit" style="flex:1;min-width:140px;padding:10px 14px;border:none;border-radius:10px;background:#0f172a;color:#fff;font-weight:700;cursor:pointer;font-family:inherit;">حفظ الحجز والإيصال</button>
+                <button type="button" onclick="wbSubmitAndWhatsApp()" style="flex:1;min-width:140px;padding:10px 14px;border:1px solid #16a34a;border-radius:10px;background:#16a34a;color:#fff;font-weight:700;cursor:pointer;font-family:inherit;">حفظ وإرسال لواتساب</button>
+              </div>
+            </form>
+          </div>
+        `;
+        document.body.appendChild(modal);
+      }
+
+      const tabsWrap = document.querySelector("#adminPanel .tabs");
+      if (tabsWrap && !document.getElementById("wbBookingsTabBtn")) {
+        const tabBtn = document.createElement("button");
+        tabBtn.id = "wbBookingsTabBtn";
+        tabBtn.type = "button";
+        tabBtn.className = "tab";
+        tabBtn.textContent = "الحجوزات والإيصالات";
+        tabBtn.onclick = function(){ switchTab("pane-bookings", this); wbRenderAdminBookings(); };
+        tabsWrap.appendChild(tabBtn);
+      }
+
+      const adminPanel = document.getElementById("adminPanel");
+      if (adminPanel && !document.getElementById("pane-bookings")) {
+        const pane = document.createElement("div");
+        pane.id = "pane-bookings";
+        pane.className = "pane";
+        pane.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px;"><strong>سجل الحجوزات والإيصالات</strong><button type="button" class="btn btn-soft btn-sm" onclick="wbRenderAdminBookings()">تحديث القائمة</button></div><div id="wbBookingsList" class="item-list"></div>`;
+        adminPanel.appendChild(pane);
+      }
+    }
+
+    function wbCompressImage(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = ev => {
+          const img = new Image();
+          img.onload = () => {
+            const maxW = 900;
+            const scale = img.width > maxW ? (maxW / img.width) : 1;
+            const canvas = document.createElement("canvas");
+            canvas.width = Math.max(1, Math.round(img.width * scale));
+            canvas.height = Math.max(1, Math.round(img.height * scale));
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            resolve(canvas.toDataURL("image/jpeg", 0.72));
+          };
+          img.onerror = reject;
+          img.src = ev.target.result;
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    window.wbHandleReceipt = async function(inp) {
+      const f = inp && inp.files && inp.files[0];
+      const prev = document.getElementById("wbReceiptPreview");
+      const err = document.getElementById("wbError");
+      if (err) err.textContent = "";
+      if (!f) { wbReceiptData = ""; wbReceiptName = ""; if (prev) prev.style.display = "none"; return; }
+      wbReceiptName = f.name || "receipt.jpg";
+      try {
+        wbReceiptData = await wbCompressImage(f);
+        if (prev) { prev.src = wbReceiptData; prev.style.display = "block"; }
+      } catch {
+        wbReceiptData = await fileToData(f);
+        if (prev) { prev.src = wbReceiptData; prev.style.display = "block"; }
+      }
+    };
+
+    window.wbOpenBooking = function(title, price) {
+      ensureBookingUI();
+      wbActiveService = { title: (title || "خدمة").trim(), price: (price || "حسب الاتفاق").trim() };
+      wbReceiptData = "";
+      wbReceiptName = "";
+      const sum = document.getElementById("wbServiceSummary");
+      if (sum) sum.textContent = `الخدمة: ${wbActiveService.title} | السعر: ${wbActiveService.price}`;
+      const form = document.getElementById("wbBookingForm");
+      if (form) form.reset();
+      const prev = document.getElementById("wbReceiptPreview");
+      if (prev) { prev.src = ""; prev.style.display = "none"; }
+      const err = document.getElementById("wbError");
+      if (err) err.textContent = "";
+      const modal = document.getElementById("wbBookingModal");
+      if (modal) modal.style.display = "flex";
+    };
+
+    window.wbCloseModal = function() {
+      const modal = document.getElementById("wbBookingModal");
+      if (modal) modal.style.display = "none";
+    };
+
+    function wbBuildRecord() {
+      const name = (document.getElementById("wbName")?.value || "").trim();
+      const contact = (document.getElementById("wbContact")?.value || "").trim();
+      const date = (document.getElementById("wbDate")?.value || "").trim();
+      const method = (document.getElementById("wbMethod")?.value || "تحويل بنكي").trim();
+      const notes = (document.getElementById("wbNotes")?.value || "").trim();
+      const err = document.getElementById("wbError");
+      if (!name || !contact || !date || !wbReceiptData) {
+        if (err) err.textContent = "يرجى تعبئة الاسم ووسيلة التواصل والموعد وإرفاق صورة الإيصال.";
+        return null;
+      }
+      if (!Array.isArray(state.bookings)) state.bookings = [];
+      const rec = {
+        id: "bk_" + Date.now(),
+        service: wbActiveService.title,
+        price: wbActiveService.price,
+        name,
+        contact,
+        date,
+        method,
+        notes,
+        receiptName: wbReceiptName || "receipt.jpg",
+        receiptData: wbReceiptData,
+        status: "قيد المراجعة",
+        createdAt: new Date().toLocaleString("ar")
+      };
+      state.bookings.unshift(rec);
+      saveState();
+      wbRenderAdminBookings();
+      return rec;
+    }
+
+    window.wbSubmitBooking = function(ev) {
+      ev.preventDefault();
+      const rec = wbBuildRecord();
+      if (!rec) return;
+      wbCloseModal();
+      alert("تم تسجيل حجزك وإرفاق الإيصال بنجاح. سنراجع الطلب ونتواصل معك.");
+    };
+
+    window.wbSubmitAndWhatsApp = function() {
+      const rec = wbBuildRecord();
+      if (!rec) return;
+      const msg = [
+        "مرحباً وحيد صالح، تم تسجيل طلب حجز جديد:",
+        `• الخدمة: ${rec.service} (${rec.price})`,
+        `• الاسم: ${rec.name}`,
+        `• التواصل: ${rec.contact}`,
+        `• الموعد المقترح: ${rec.date}`,
+        `• طريقة الدفع: ${rec.method}`,
+        rec.notes ? `• ملاحظات: ${rec.notes}` : "",
+        `• الإيصال: تم إرفاقه في النظام (${rec.receiptName})`
+      ].filter(Boolean).join("
+");
+      wbCloseModal();
+      window.open(waLink(msg), "_blank", "noopener");
+    };
+
+    window.wbSetBookingStatus = function(id, status) {
+      if (!Array.isArray(state.bookings)) return;
+      const item = state.bookings.find(x => x.id === id);
+      if (!item) return;
+      item.status = status;
+      saveState();
+      wbRenderAdminBookings();
+    };
+
+    window.wbDeleteBooking = function(id) {
+      if (!Array.isArray(state.bookings)) return;
+      state.bookings = state.bookings.filter(x => x.id !== id);
+      saveState();
+      wbRenderAdminBookings();
+    };
+
+    window.wbRenderAdminBookings = function() {
+      ensureBookingUI();
+      const box = document.getElementById("wbBookingsList");
+      if (!box) return;
+      const list = Array.isArray(state.bookings) ? state.bookings : [];
+      if (!list.length) {
+        box.innerHTML = `<div class="item-row"><span>لا توجد حجوزات مسجلة حالياً.</span></div>`;
+        return;
+      }
+      box.innerHTML = list.map(b => `
+        <div class="item-row" style="flex-direction:column;align-items:stretch;gap:8px;padding:12px;border:1px solid #e2e8f0;border-radius:10px;margin-bottom:8px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;">
+            <strong>${esc(b.service)} — ${esc(b.price)}</strong>
+            <span style="font-size:.82rem;padding:2px 8px;border-radius:999px;background:#f1f5f9;">${esc(b.status || "قيد المراجعة")}</span>
+          </div>
+          <div style="font-size:.9rem;line-height:1.6;">
+            <div><strong>العميل:</strong> ${esc(b.name)} | <strong>التواصل:</strong> ${esc(b.contact)}</div>
+            <div><strong>الموعد:</strong> ${esc(b.date)} | <strong>الدفع:</strong> ${esc(b.method)} | <strong>التاريخ:</strong> ${esc(b.createdAt || "")}</div>
+            ${b.notes ? `<div><strong>ملاحظات:</strong> ${esc(b.notes)}</div>` : ""}
+          </div>
+          ${b.receiptData ? `<div><a href="${b.receiptData}" target="_blank" rel="noopener"><img src="${b.receiptData}" alt="إيصال ${esc(b.name)}" style="max-height:140px;border-radius:8px;border:1px solid #cbd5e1;" /></a></div>` : ""}
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <button type="button" class="btn btn-soft btn-sm" onclick="wbSetBookingStatus('${b.id}','مؤكد')">تأكيد الحجز</button>
+            <button type="button" class="btn btn-soft btn-sm" onclick="wbSetBookingStatus('${b.id}','مرفوض')">رفض</button>
+            <button type="button" class="btn btn-danger btn-sm" onclick="wbDeleteBooking('${b.id}')">حذف</button>
+          </div>
+        </div>
+      `).join("");
+    };
+
+    document.addEventListener("DOMContentLoaded", function() {
+      ensureBookingUI();
+      const grid = document.getElementById("servicesGrid");
+      if (grid) {
+        grid.addEventListener("click", function(ev) {
+          const trigger = ev.target.closest("a,button");
+          if (!trigger) return;
+          const card = trigger.closest(".card");
+          if (!card) return;
+          const title = (card.querySelector("h3")?.textContent || "خدمة").trim();
+          const price = (card.querySelector(".price")?.textContent || "حسب الاتفاق").trim();
+          ev.preventDefault();
+          wbOpenBooking(title, price);
+        }, true);
+      }
+      const origFill = typeof fillAdmin === "function" ? fillAdmin : null;
+      if (origFill) {
+        window.fillAdmin = function() {
+          origFill();
+          wbRenderAdminBookings();
+        };
+      }
+    });
+
     render();
     const initSb = getSb();
     if (initSb.url && initSb.key) pullSb();
   </script>
+
 <!-- START Brevo Form Script -->
 <script>
   window.REQUIRED_CODE_ERROR_MESSAGE = "يرجى اختيار رمز الدولة";
