@@ -534,7 +534,7 @@
               <div class="field"><label>عنوان الكتاب</label><input id="bTitle" /></div>
               <div class="field"><label>دار النشر</label><input id="bPub" /></div>
               <div class="field"><label>السعر</label><input id="bPrice" /></div>
-              <div class="field"><label>رابط الدفع PayPal</label><input id="bPaypal" placeholder="https://www.paypal.com/paypalme/WAHIDJerpi573?locale.x=en_US&country.x=ID..." /></div>
+              <div class="field"><label>رابط الدفع PayPal</label><input id="bPaypal" placeholder="https://paypal.me/..." /></div>
               <div class="field"><label>صورة غلاف الكتاب (من الجهاز)</label><input type="file" id="bCoverFile" accept="image/*" /></div>
               <div class="field"><label>أو رابط صورة الغلاف</label><input id="bCoverUrl" placeholder="https://..." /></div>
             </div>
@@ -693,7 +693,7 @@
         desc: "إبحار تأملي وروائي في سيرة النفس ورحلتها نحو الاستشفاء الذاتي، واستكشاف الأصوات الداخلية والمشاعر التي تشكّل وعينا وتجاربنا، للانتقال من الهروب والارتباك إلى الحضور والسكينة الداخلية.",
         quote: "«الألم غير موجود، الوهم يخلق الألم والحقيقة لا تؤلم.»",
         price: "السعر: 15$",
-        paypal: "https://www.paypal.com/paypalme/WAHIDJerpi573?locale.x=en_US&country.x=ID",
+        paypal: "https://paypal.me/",
         cover: ""
       },
       services: [
@@ -942,8 +942,6 @@
       document.getElementById("wbInfo").textContent = "الخدمة: " + wbSelected.title + " | السعر: " + wbSelected.price;
       document.getElementById("wbForm").reset();
       document.getElementById("wbModal").style.display = "flex";
-    
-      try { wbApplyPaymentToClient(); } catch (e) {}
     }
 
     function wbClose() {
@@ -1136,123 +1134,7 @@
       } catch (e) {}
     }
 
-    
-    function wbGetDefaultPaypal() {
-      try {
-        var bInput = document.getElementById("bPaypal");
-        if (bInput && bInput.value && bInput.value.trim()) return bInput.value.trim();
-        if (typeof state !== "undefined" && state.book && state.book.paypal && state.book.paypal.trim()) {
-          return state.book.paypal.trim();
-        }
-      } catch (e) {}
-      return 'https://www.paypal.com/paypalme/WAHIDJerpi573?locale.x=en_US&country.x=ID';
-    }
-
-    function wbEnsurePaymentBox() {
-      var listEl = document.getElementById("wbList");
-      var host = (listEl && listEl.parentElement) ? listEl.parentElement : null;
-      if (!host || document.getElementById("wbPaymentAdminBox")) return;
-
-      var curBank = (state.paymentInfo && state.paymentInfo.bank) ? state.paymentInfo.bank : "";
-      var curPaypal = (state.paymentInfo && state.paymentInfo.paypal) ? state.paymentInfo.paypal : wbGetDefaultPaypal();
-
-      var box = document.createElement("div");
-      box.id = "wbPaymentAdminBox";
-      box.style.cssText = "margin-top:14px;padding:12px;border:1px solid #cbd5e1;border-radius:10px;background:#f8fafc;display:flex;flex-direction:column;gap:8px;";
-      box.innerHTML =
-        "<div style=\"font-weight:700;font-size:14px;\">بيانات الدفع للعملاء (حساب بنكي / PayPal)</div>" +
-        "<label style=\"font-size:12px;color:#334155;\">الحساب البنكي (IBAN / رقم الحساب / اسم البنك والمستفيد):</label>" +
-        "<textarea id=\"wbBankInput\" rows=\"2\" placeholder=\"مثال: بنك ... - اسم المستفيد ... - IBAN ...\" style=\"width:100%;padding:8px;border:1px solid #cbd5e1;border-radius:6px;\">" + esc(curBank) + "</textarea>" +
-        "<label style=\"font-size:12px;color:#334155;\">حساب PayPal أو رابط الدفع:</label>" +
-        "<input id=\"wbPaypalInput\" type=\"text\" placeholder=\"https://www.paypal.com/paypalme/...\" value=\"" + esc(curPaypal) + "\" style=\"width:100%;padding:8px;border:1px solid #cbd5e1;border-radius:6px;\" />" +
-        "<div style=\"display:flex;gap:8px;align-items:center;flex-wrap:wrap;\">" +
-          "<button type=\"button\" onclick=\"wbSavePaymentInfo()\" style=\"padding:8px 14px;border:none;border-radius:6px;background:#0f172a;color:#fff;cursor:pointer;\">حفظ بيانات الدفع</button>" +
-          "<span id=\"wbPaymentSavedMsg\" style=\"font-size:12px;color:#15803d;\"></span>" +
-        "</div>";
-
-      host.appendChild(box);
-      wbApplyPaymentToClient();
-    }
-
-    function wbSavePaymentInfo() {
-      var bankEl = document.getElementById("wbBankInput");
-      var paypalEl = document.getElementById("wbPaypalInput");
-      var msgEl = document.getElementById("wbPaymentSavedMsg");
-      var valPaypal = paypalEl ? paypalEl.value.trim() : wbGetDefaultPaypal();
-      state.paymentInfo = {
-        bank: bankEl ? bankEl.value.trim() : "",
-        paypal: valPaypal
-      };
-      if (state.book && valPaypal) {
-        state.book.paypal = valPaypal;
-        var bInput = document.getElementById("bPaypal");
-        if (bInput) bInput.value = valPaypal;
-        var pBtn = document.getElementById("paypalBtn");
-        if (pBtn) pBtn.href = valPaypal;
-      }
-      if (typeof saveState === "function") saveState();
-      wbApplyPaymentToClient();
-      if (msgEl) {
-        msgEl.textContent = "تم حفظ بيانات الحساب البنكي و PayPal.";
-        setTimeout(function() { if (msgEl) msgEl.textContent = ""; }, 3000);
-      }
-    }
-
-    function wbApplyPaymentToClient() {
-      var info = (typeof state !== "undefined" && state.paymentInfo) ? state.paymentInfo : {};
-      var bankText = (info.bank && info.bank.trim()) ? info.bank.trim() : "سيتم تزويدك ببيانات الحساب البنكي عند تأكيد الحجز.";
-      var paypalText = (info.paypal && info.paypal.trim()) ? info.paypal.trim() : (typeof wbGetDefaultPaypal === "function" ? wbGetDefaultPaypal() : 'https://www.paypal.com/paypalme/WAHIDJerpi573?locale.x=en_US&country.x=ID');
-
-      var pInput = document.getElementById("wbPaypalInput");
-      if (pInput && !pInput.value.trim()) pInput.value = paypalText;
-
-      var targets = document.querySelectorAll("[data-pay-bank], #wbBankDisplay, .wb-bank-info");
-      targets.forEach(function(el) { el.textContent = bankText; });
-
-      var pTargets = document.querySelectorAll("[data-pay-paypal], #wbPaypalDisplay, .wb-paypal-info");
-      pTargets.forEach(function(el) {
-        if (el.tagName === "A") el.href = paypalText;
-        el.textContent = paypalText;
-      });
-
-      var host = document.getElementById("wbForm") ||
-                 document.getElementById("wbModal") ||
-                 document.getElementById("bookingModal") ||
-                 document.getElementById("bookModal") ||
-                 document.querySelector("[role=\"dialog\"]") ||
-                 null;
-      if (!host) return;
-
-      var sumBox = host.querySelector("#wbClientPaymentSummary");
-      if (!sumBox) {
-        sumBox = document.createElement("div");
-        sumBox.id = "wbClientPaymentSummary";
-        sumBox.style.cssText = "margin:8px 0 10px;padding:10px 12px;border:1px solid #cbd5e1;border-radius:10px;background:#f8fafc;font-size:13px;line-height:1.7;color:#0f172a;text-align:right;";
-        var receiptEl = host.querySelector("#wbReceiptRef");
-        var submitBtn = host.querySelector("button[type=\"submit\"]");
-        if (receiptEl && receiptEl.parentElement) {
-          receiptEl.parentElement.insertBefore(sumBox, receiptEl.nextSibling);
-        } else if (submitBtn && submitBtn.parentElement) {
-          submitBtn.parentElement.insertBefore(sumBox, submitBtn);
-        } else {
-          host.appendChild(sumBox);
-        }
-      }
-
-      var safePaypal = typeof esc === "function" ? esc(paypalText) : paypalText;
-      var safeBank = typeof esc === "function" ? esc(bankText) : bankText;
-      var linkHtml = /^https?:\/\//i.test(paypalText)
-        ? "<a href=\"" + safePaypal + "\" target=\"_blank\" rel=\"noopener\" style=\"color:#0369a1;text-decoration:underline;word-break:break-all;font-weight:600;\">" + safePaypal + "</a>"
-        : "<span>" + safePaypal + "</span>";
-
-      sumBox.innerHTML =
-        "<div style=\"font-weight:700;margin-bottom:4px;\">بيانات الدفع للعميل</div>" +
-        "<div><strong>الحساب البنكي:</strong> " + safeBank + "</div>" +
-        "<div><strong>PayPal:</strong> " + linkHtml + "</div>";
-    }
-
-function wbRenderList(skipCloudSync) {
-      wbEnsurePaymentBox();
+    function wbRenderList(skipCloudSync) {
       if (!skipCloudSync) wbSyncBookingsFromCloud();
       wbEnsureUI();
       var box = document.getElementById("wbList");
@@ -1312,9 +1194,9 @@ function wbRenderList(skipCloudSync) {
       selectedList: "{quantity} قائمة محددة",
       selectedLists: "{quantity} قوائم محددة",
       selectedOption: "{quantity} خيار محدد",
-      selectedOptions: "{quantity خيارات محددة",
-    
-  ;
+      selectedOptions: "{quantity} خيارات محددة",
+    }
+  };
   var AUTOHIDE = Boolean(0);
 </script>
 <script defer src="https://sibforms.com/forms/end-form/build/main.js"></script>
