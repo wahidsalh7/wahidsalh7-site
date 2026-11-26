@@ -956,10 +956,12 @@
       var receiptRef = document.getElementById("wbReceiptRef").value.trim();
       if (!name || !phone || !day) return;
       if (!Array.isArray(state.bookings)) state.bookings = [];
+      var svcTitle = (wbSelected && wbSelected.title) ? wbSelected.title : (state.book && state.book.title) || "خدمة";
+      var svcPrice = (wbSelected && wbSelected.price) ? wbSelected.price : (state.book && state.book.price) || "";
       var item = {
         id: "b" + Date.now(),
-        service: wbSelected.title,
-        price: wbSelected.price,
+        service: svcTitle,
+        price: svcPrice,
         name: name,
         phone: phone,
         day: day,
@@ -971,14 +973,62 @@
       saveState();
       wbRenderList();
       wbClose();
+
+      try {
+        var sb = (typeof getSb === "function") ? getSb() : { url: "https://nwbzfpcdheqjuubpndep.supabase.co", key: "sb_publishable_ZUWpZQob_gJoNsRWm-aOSQ_7kJqi1pn" };
+        if (sb && sb.url && sb.key) {
+          fetch(sb.url.replace(/\/+$/, "") + "/rest/v1/bookings", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "apikey": sb.key,
+              "Authorization": "Bearer " + sb.key,
+              "Prefer": "return=minimal"
+            },
+            body: JSON.stringify({
+              service_title: item.service,
+              service_price: item.price,
+              customer_name: item.name,
+              customer_contact: item.phone,
+              preferred_date: item.day,
+              payment_method: (state.book && state.book.paypal) ? "تحويل / PayPal" : "تحويل بنكي",
+              receipt_ref: item.receiptRef || null,
+              notes: null,
+              status: "pending"
+            })
+          }).catch(function(e) { console.warn("Supabase booking sync error:", e); });
+
+          fetch(sb.url.replace(/\/+$/, "") + "/functions/v1/swift-action", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "apikey": sb.key,
+              "Authorization": "Bearer " + sb.key
+            },
+            body: JSON.stringify({
+              record: {
+                client_name: item.name,
+                client_email: "-",
+                client_phone: item.phone,
+                service_name: item.service,
+                booking_date: item.day,
+                booking_time: "-",
+                notes: "السعر: " + item.price + (item.receiptRef ? " | إيصال: " + item.receiptRef : ""),
+                status: "pending"
+              }
+            })
+          }).catch(function(e) { console.warn("Telegram edge function error:", e); });
+        }
+      } catch (e) { console.warn("Supabase booking hook error:", e); }
+
+      var msg = "مرحباً وحيد صالح، طلب حجز جديد:\n• الخدمة: " + item.service + " (" + item.price + ")\n• الاسم: " + item.name + "\n• التواصل: " + item.phone + "\n• الموعد: " + item.day + (item.receiptRef ? "\n• مرجع الإيصال: " + item.receiptRef : "");
       if (goWa) {
-        var msg = "مرحباً وحيد صالح، طلب حجز جديد:\n• الخدمة: " + item.service + " (" + item.price + ")\n• الاسم: " + item.name + "\n• التواصل: " + item.phone + "\n• الموعد: " + item.day + (item.receiptRef ? "\n• مرجع الإيصال: " + item.receiptRef : "");
-        window.open(waLink(msg), "_blank", "noopener");
+        var adminWaUrl = "https://wa.me/6281225329461?text=" + encodeURIComponent(msg);
+        window.open(adminWaUrl, "_blank", "noopener");
       } else {
         alert("تم تسجيل الحجز بنجاح.");
       }
     }
-
     function wbSetStatus(id, st) {
       if (!Array.isArray(state.bookings)) return;
       var row = state.bookings.find(function(x) { return x.id === id; });
