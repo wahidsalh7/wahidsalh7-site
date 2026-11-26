@@ -1000,6 +1000,7 @@
 
           fetch(sb.url.replace(/\/+$/, "") + "/functions/v1/swift-action", {
             method: "POST",
+            keepalive: true,
             headers: {
               "Content-Type": "application/json",
               "apikey": sb.key,
@@ -1007,17 +1008,17 @@
             },
             body: JSON.stringify({
               record: {
-                client_name: item.name,
+                client_name: (item && item.name) ? item.name : "-",
                 client_email: "-",
-                client_phone: item.phone,
-                service_name: item.service,
-                booking_date: item.day,
+                client_phone: (item && item.phone) ? item.phone : "-",
+                service_name: (item && item.service) ? item.service : "-",
+                booking_date: (item && item.day) ? item.day : "-",
                 booking_time: "-",
-                notes: "السعر: " + item.price + (item.receiptRef ? " | إيصال: " + item.receiptRef : ""),
+                notes: "السعر: " + ((item && item.price) ? item.price : "-") + ((item && item.receiptRef) ? " | إيصال: " + item.receiptRef : ""),
                 status: "pending"
               }
             })
-          }).catch(function(e) { console.warn("Telegram edge function error:", e); });
+          })
         }
       } catch (e) { console.warn("Supabase booking hook error:", e); }
 
